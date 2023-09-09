@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+	outline: none;
+}
+
+body {
+	background-color: #18181b;
+}
+
+select {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.input-email-focus {
+	@apply top-3 text-[11px] transition-all;
+}
+
+.checkbox {
+	@apply relative left-5 flex cursor-pointer select-none items-center justify-center text-xs text-[#b3b3b3];
+}
+
+.checkbox::after,
+.checkbox::before {
+	content: "";
+	@apply absolute right-full top-1/2 aspect-square h-full -translate-x-1 -translate-y-1/2 rounded-sm bg-[#737373] bg-center bg-no-repeat;
+	background-size: 80%;
+}
+
+.checkbox-on::after {
+	background-image: url("/public/icons/checkbox-tick.svg");
+}
+
+.sign-in-error-input {
+	@apply border-[#e87c03];
+}
+
+.sign-in-error-input + span.error {
+	@apply block w-full p-1 text-xs text-[#e87c03] content-[attr(data-error-message)];
+}
+
+.sign-up-error-message::after {
+	content: attr(data-error-message);
+	@apply absolute left-0 top-full h-fit w-full cursor-auto text-sm font-medium text-red-500;
+}
+
+@media screen and (min-width: 408px) and (max-width: 639px) {
+	.footer .footer-links {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.spinner .t {
+	animation: t 1.5s ease-out infinite;
+}
+
+.spinner .r {
+	animation: r 1.5s ease-out infinite;
+}
+.spinner .b {
+	animation: b 1.5s ease-out infinite;
+}
+.spinner .l {
+	animation: l 1.5s ease-out infinite;
+}
+
+@keyframes t {
+	0% {
+		top: 0%;
+		left: 0%;
+	}
+	50% {
+		top: 20%;
+		left: 20%;
+	}
+	100% {
+		top: 0%;
+		left: 0%;
+	}
+}
+
+@keyframes r {
+	0% {
+		top: 0%;
+		right: 0%;
+	}
+	50% {
+		top: 20%;
+		right: 20%;
+	}
+	100% {
+		top: 0%;
+		right: 0%;
+	}
+}
+
+@keyframes b {
+	0% {
+		bottom: 0%;
+		right: 0%;
+	}
+	50% {
+		bottom: 20%;
+		right: 20%;
+	}
+	100% {
+		bottom: 0%;
+		right: 0%;
+	}
+}
+
+@keyframes l {
+	0% {
+		bottom: 0%;
+		left: 0%;
+	}
+	50% {
+		bottom: 20%;
+		left: 20%;
+	}
+	100% {
+		bottom: 0%;
+		left: 0%;
+	}
+}
