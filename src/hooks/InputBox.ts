@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  *
@@ -6,35 +6,37 @@ import { RefObject, useEffect } from "react";
  * @param focused Set the cursor to the input box if `focused` is true, otherwise not set cursor.
  * @returns two functions `focus` and `leave`. `focus()` to set the focus to the input box and `leave()` to unset the focus of the input box.
  */
-export function useInputBox(
-	containerElement: RefObject<HTMLElement>,
-	focused: boolean = false,
-) {
+export function useInputRef(focused: boolean = false) {
+	const inputBox = useRef<HTMLDivElement>(null);
+
 	let inputElement: HTMLInputElement | null = null;
-	let labelElement = containerElement.current?.children[1];
+	let labelElement = inputBox.current?.children[1];
 
 	let isFocus = false;
 
-	function focus() {
+	const focus = useRef(() => {
 		isFocus = true;
 		inputElement?.focus();
 		labelElement?.classList.add("input-email-focus");
-	}
-	function leave() {
+		console.log("focus");
+	});
+	const leave = useRef(() => {
 		if (inputElement?.value.length !== 0) return;
 		isFocus = false;
 		labelElement?.classList.remove("input-email-focus");
-	}
+	});
 
 	useEffect(() => {
-		inputElement = containerElement.current
-			?.children[0] as HTMLInputElement;
-		labelElement = containerElement.current?.children[1];
+		focus.current = focus.current;
+		leave.current = leave.current;
 
-		if (!(containerElement.current && inputElement && labelElement)) return;
+		inputElement = inputBox.current?.children[0] as HTMLInputElement;
+		labelElement = inputBox.current?.children[1];
+
+		if (!(inputBox.current && inputElement && labelElement)) return;
 
 		if (focused) {
-			focus();
+			focus.current();
 		}
 
 		document.body.onclick = function (event: Event) {
@@ -45,7 +47,7 @@ export function useInputBox(
 			}
 
 			if (
-				containerElement.current?.contains(event.target as Node) ||
+				inputBox.current?.contains(event.target as Node) ||
 				inputElement?.value.length !== 0
 			) {
 				labelElement?.classList.add("input-email-focus");
@@ -57,7 +59,7 @@ export function useInputBox(
 		return () => {
 			document.body.onclick = null;
 		};
-	}, [containerElement]);
+	}, [inputBox]);
 
-	return { focus, leave };
+	return { focus, leave, inputBox };
 }

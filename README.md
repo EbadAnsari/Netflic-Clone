@@ -1,6 +1,15 @@
-<a>Home</a>
-<a>Series</a>
-<a>Films</a>
-<a>New & Popular</a>
-<a>My List</a>
-<a>Browse by Languages</a>
+FAQ
+Help Centre
+Account
+Media Centre
+Investor Relations
+Jobs
+Ways to Watch
+Terms of Use
+Privacy
+Cookie Preferences
+Corporate Information
+Contact Us
+Speed Test
+Legal Notices
+Only on Netflix

@@ -8,11 +8,11 @@ export type Prettify<T> = {
 } & {};
 
 export interface SignIn {
-	location: "/sign/in";
+	location: "/in/login";
 	text: "Sign In";
 }
 export interface SignUp {
-	location: "/sign/up";
+	location: "/in";
 	text: "Sign Up";
 }
 export type SigningState = SignIn | SignUp;
@@ -38,6 +38,7 @@ export interface ModalProps {
 	title: string;
 	duration: number;
 	genre: string;
+	videoSource: string;
 	description: string;
 }
 
@@ -46,3 +47,7 @@ export interface Time {
 	minute: number | undefined;
 	hour: number | undefined;
 }
+
+export type ThemeType = "light" | "dark" | "";
+
+export type NavigateType = { current: 1 | 2 | 3 };

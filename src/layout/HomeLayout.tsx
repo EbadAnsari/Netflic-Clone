@@ -7,15 +7,15 @@ import { add, close } from "@store/slice/TrailerModalSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+import VideoPlay from "@components/VideoPlay";
 
 export default function HomeLayout() {
 	const session = useSession();
+	const dispatch = useDispatch();
 
 	if (!(session.get("email") && session.get("password"))) {
 		return <Navigate to={"/sign/up"} />;
 	}
-
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(close());
@@ -27,7 +27,7 @@ export default function HomeLayout() {
 			<section className="banner relative">
 				<video
 					className="h-[56.25vw] w-full object-cover brightness-[60%] transition duration-500"
-					src="/public/videos/big-buck-bunny.mp4"
+					src="/public/videos/temp/big-buck-bunny.mp4"
 					autoPlay
 					muted
 					loop
@@ -49,9 +49,12 @@ export default function HomeLayout() {
 				</div>
 			</section>
 
+			{/* <VideoPlay /> */}
+
 			<TrailerModal
 				title="Big Buck Bunny"
 				genre="Comedy"
+				videoSource="/public/videos/temp/big-buck-bunny.mp4"
 				duration={600}
 				description="Three rodents amuse themselves by harassing creatures of the forest. However, when they mess with a bunny, he decides to teach them a lesson."
 			/>

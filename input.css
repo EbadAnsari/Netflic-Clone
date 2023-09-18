@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 * {
-	outline: none;
+	@apply outline-none;
+	/* outline: none; */
 }
 
 body {
-	background-color: #18181b;
+	@apply text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100;
 }
 
 select {
@@ -15,8 +16,12 @@ select {
 	appearance: none;
 }
 
+.input-box {
+	@apply w-full rounded border-b-2 border-transparent bg-white px-4 pb-2 pt-6 text-black [&_+_span]:bg-red-500;
+}
+
 .input-email-focus {
-	@apply top-3 text-[11px] transition-all;
+	@apply top-4 text-xs transition-all;
 }
 
 .checkbox {
@@ -34,12 +39,8 @@ select {
 	background-image: url("/public/icons/checkbox-tick.svg");
 }
 
-.sign-in-error-input {
-	@apply border-[#e87c03];
-}
-
 .sign-in-error-input + span.error {
-	@apply block w-full p-1 text-xs text-[#e87c03] content-[attr(data-error-message)];
+	@apply block w-full p-[2px] text-xs text-[#e87c03] content-[attr(data-error-message)];
 }
 
 .sign-up-error-message::after {
@@ -51,6 +52,14 @@ select {
 	.footer .footer-links {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
+}
+
+li.marker::marker {
+	/* @apply text-netflix-red; */
+}
+
+.family {
+	/* font-family: Arial, Helvetica, sans-serif; */
 }
 
 .spinner .t {
@@ -124,5 +133,81 @@ select {
 	100% {
 		bottom: 0%;
 		left: 0%;
+	}
+}
+
+.type > div {
+	@apply text-white;
+}
+
+.plan-container :not(:is(.type)) > ul {
+	@apply text-zinc-500 dark:text-zinc-400;
+}
+
+.type .premium {
+	background: linear-gradient(
+			318.25deg,
+			rgb(229, 9, 20) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+}
+.type:has(.premium) li.marker::marker {
+	@apply text-netflix-red;
+}
+
+.type .standard {
+	background: linear-gradient(
+			318.25deg,
+			rgb(176, 56, 220) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+}
+.type:has(.standard) li.marker::marker {
+	@apply text-[#b038dc];
+}
+
+.type .basic {
+	background: linear-gradient(
+			318.25deg,
+			rgb(109, 59, 227) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+}
+.type:has(.basic) li.marker::marker {
+	@apply text-[#6d3be3];
+}
+
+.type .mobile {
+	background: linear-gradient(
+			318.25deg,
+			rgb(33, 114, 227) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+}
+.type:has(.mobile) li.marker::marker {
+	@apply text-[#2172e3];
+}
+
+.type img {
+	@apply mr-2 w-5;
+	animation: scale 150ms ease 1;
+}
+
+@keyframes scale {
+	from {
+		@apply mr-0 w-0;
+		/* transform: scale(0); */
+	}
+	to {
+		@apply mr-2 w-5;
+		/* transform: scale(1); */
 	}
 }

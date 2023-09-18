@@ -1,13 +1,12 @@
+import { logOut } from "@utils/functions";
 import { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import DropDown from "./DropDown";
 import ProfileIcon from "./ProfileIcon";
-import { useSession } from "@hooks/Storage";
 
 export default function Navbar() {
 	const [opacity, setOpacity] = useState<number>(0);
 	const [logOutStatus, setLogOutStatus] = useState(false);
-	const session = useSession();
 
 	useEffect(() => {
 		window.onscroll = () => {
@@ -71,9 +70,7 @@ export default function Navbar() {
 					<Form
 						method="GET"
 						action="/sign/up"
-						onSubmit={() => {
-							session.clear("email", "password");
-						}}
+						onSubmit={logOut}
 						className={`${
 							logOutStatus ? "block" : "hidden"
 						} absolute right-6 top-full translate-y-3 bg-black py-5 text-white`}

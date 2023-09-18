@@ -1,13 +1,13 @@
-import { AppState, ModalProps, TrailerModalState } from "@interfaces/interface";
-import { secondsToMinutes } from "@utils/functions";
-import PlayButton from "./PlayButton";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { ModalProps, TrailerModalState } from "@interfaces/interface";
 import { close } from "@store/slice/TrailerModalSlice";
+import { secondsToMinutes } from "@utils/functions";
+import { useDispatch, useSelector } from "react-redux";
+import PlayButton from "./PlayButton";
 
 export default function TrailerModal({
 	title,
 	genre,
+	videoSource: videoSrc,
 	duration,
 	description,
 }: ModalProps) {
@@ -21,11 +21,11 @@ export default function TrailerModal({
 	const { minute: trailerInMinutes } = secondsToMinutes(duration);
 
 	return (
-		<section className="fixed left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
+		<section className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
 			<div className="relative w-[calc(100%_-_2rem)] overflow-hidden rounded-md bg-zinc-900 md:w-min">
 				<div className="modal-video relative aspect-video w-full md:h-[27rem] md:w-auto">
 					<video
-						src="/public/videos/big-buck-bunny.mp4"
+						src={videoSrc}
 						className="h-full object-cover"
 						autoPlay
 						muted

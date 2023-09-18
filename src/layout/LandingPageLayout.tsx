@@ -1,20 +1,21 @@
 import Footer from "@components/Footer";
 import QuestionAnswer from "@components/QuestionAnswer";
 import SelectLanguage from "@components/SelectLanguage";
-import { signIn, signUp } from "@store/slice/SigningSlice";
-import { useEffect } from "react";
+import { SigningState } from "@interfaces/interface";
+import { useTheme } from "@utils/functions";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function LandingPage() {
-	const variant = useSelector((state: any) => state.SigningReducer);
+	const variant: SigningState = useSelector(
+		(state: any) => state.SigningReducer,
+	);
 	const location = useLocation();
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (location.pathname === "/sign/") navigate("/sign/up");
-	});
+	const theme = useTheme();
+
+	theme.setTheme("dark");
 
 	const questionAndAnswer = [
 		{
@@ -71,15 +72,10 @@ export default function LandingPage() {
 					</a>
 
 					<div className="right flex items-center gap-x-6">
-						<SelectLanguage />
+						<SelectLanguage shrink />
 
 						<Link
 							to={variant.location}
-							onClick={() => {
-								if (variant.location === "/sign/in")
-									dispatch(signIn());
-								else dispatch(signUp());
-							}}
 							className="rounded-[4px] bg-[#e50914] px-4 py-1 font-semibold text-white"
 						>
 							{variant.text}
@@ -244,8 +240,26 @@ export default function LandingPage() {
 
 			<hr className="h-2 border-0 bg-[#232323]" />
 
-			<section className="bg-black">
-				<Footer />
+			<section className="mx-auto bg-black [&>footer]:w-11/12 dark:[&>footer]:bg-black">
+				<Footer
+					textLink={[
+						{ text: "FAQ", link: "#" },
+						{ text: "Help Centre", link: "#" },
+						{ text: "Account", link: "#" },
+						{ text: "Media Centre", link: "#" },
+						{ text: "Investor Relations", link: "#" },
+						{ text: "Jobs", link: "#" },
+						{ text: "Ways to Watch", link: "#" },
+						{ text: "Terms of Use", link: "#" },
+						{ text: "Privacy", link: "#" },
+						{ text: "Cookie Preferences", link: "#" },
+						{ text: "Corporate Information", link: "#" },
+						{ text: "Contact Us", link: "#" },
+						{ text: "Speed Test", link: "#" },
+						{ text: "Legal Notices", link: "#" },
+						{ text: "Only on Netflix", link: "#" },
+					]}
+				/>
 			</section>
 		</>
 	);

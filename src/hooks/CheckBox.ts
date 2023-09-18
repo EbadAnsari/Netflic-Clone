@@ -1,9 +1,7 @@
-import { RefObject, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export function useCheckBox(
-	checkBox: RefObject<HTMLLabelElement>,
-	checkBoxState: boolean = false,
-) {
+export function useCheckBox(checkBoxState: boolean = false) {
+	const checkBox = useRef<HTMLLabelElement>(null);
 	let value = checkBoxState;
 	function handleClick() {
 		value = checkBox.current?.classList.toggle("checkbox-on", !value)!;
@@ -18,10 +16,13 @@ export function useCheckBox(
 
 	useEffect(() => {
 		if (checkBox.current === null) return;
+
+		console.log(checkBox);
+		handleClick();
 		removeChild(checkBox.current);
 		checkBox.current.appendChild(document.createTextNode("Remember Me"));
 		checkBox.current?.classList.add("checkbox");
 		checkBox.current?.addEventListener("click", handleClick);
 	}, [checkBox]);
-	return () => value;
+	return { checkBox, checked: () => value };
 }
