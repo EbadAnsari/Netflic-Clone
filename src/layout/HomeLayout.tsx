@@ -8,13 +8,18 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import VideoPlay from "@components/VideoPlay";
+import { useTheme } from "@utils/functions";
 
 export default function HomeLayout() {
 	const session = useSession();
 	const dispatch = useDispatch();
 
+	const theme = useTheme();
+
+	theme.setTheme("dark");
+
 	if (!(session.get("email") && session.get("password"))) {
-		return <Navigate to={"/sign/up"} />;
+		return <Navigate to={"/in"} />;
 	}
 
 	useEffect(() => {
@@ -32,7 +37,7 @@ export default function HomeLayout() {
 					muted
 					loop
 				/>
-				<div className="absolute top-2/3 ml-10 flex w-max gap-3">
+				<div className="absolute top-2/3 ml-10 flex w-max gap-3 dark:text-zinc-900">
 					<PlayButton
 						icon="/public/icons/play-icon.svg"
 						text="Play"
@@ -59,7 +64,26 @@ export default function HomeLayout() {
 				description="Three rodents amuse themselves by harassing creatures of the forest. However, when they mess with a bunny, he decides to teach them a lesson."
 			/>
 
-			<Footer />
+			{/* <Footer /> */}
+			<Footer
+				textLink={[
+					{ text: "FAQ", link: "#" },
+					{ text: "Help Centre", link: "#" },
+					{ text: "Account", link: "#" },
+					{ text: "Media Centre", link: "#" },
+					{ text: "Investor Relations", link: "#" },
+					{ text: "Jobs", link: "#" },
+					{ text: "Ways to Watch", link: "#" },
+					{ text: "Terms of Use", link: "#" },
+					{ text: "Privacy", link: "#" },
+					{ text: "Cookie Preferences", link: "#" },
+					{ text: "Corporate Information", link: "#" },
+					{ text: "Contact Us", link: "#" },
+					{ text: "Speed Test", link: "#" },
+					{ text: "Legal Notices", link: "#" },
+					{ text: "Only on Netflix", link: "#" },
+				]}
+			/>
 		</section>
 	);
 }

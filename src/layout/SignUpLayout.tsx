@@ -5,10 +5,10 @@ import { Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
 	const theme = useTheme();
-	theme.setTheme("light");
+	theme.setTheme(theme.theme());
 
 	return (
-		<>
+		<section className="flex h-full flex-col">
 			<nav className="flex items-center justify-between border-b border-b-zinc-200 p-4 dark:border-b-zinc-700 dark:bg-zinc-900 sm:p-6">
 				<a
 					href="https://netflix/signup/"
@@ -31,7 +31,7 @@ export default function SignUpLayout() {
 				</div>
 			</nav>
 
-			<section className="dark:text-zinc-100">
+			<section className="overflow-x-hidden dark:text-zinc-100">
 				<Outlet />
 			</section>
 
@@ -46,6 +46,6 @@ export default function SignUpLayout() {
 					{ text: "Corporate Information", link: "#" },
 				]}
 			/>
-		</>
+		</section>
 	);
 }

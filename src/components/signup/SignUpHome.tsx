@@ -1,4 +1,6 @@
+import { slideInOut } from "@animation/animate";
 import { useSession } from "@hooks/Storage";
+import { motion as m } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
 
 export default function SignUpHome() {
@@ -8,7 +10,17 @@ export default function SignUpHome() {
 		return <Navigate to={"/signup/password"} />;
 	}
 	return (
-		<div className="mx-auto my-20 flex w-80 flex-col items-center">
+		<m.div
+			variants={slideInOut}
+			initial="initial"
+			animate="animate"
+			exit="exit"
+			transition={{
+				duration: 0.4,
+				delay: 0.1,
+			}}
+			className="mx-auto my-20 flex w-80 flex-col items-center"
+		>
 			<div className="mx-auto w-fit rounded-full border-[3px] border-netflix-red p-2">
 				<img
 					src="/public/icons/checkbox-tick.svg"
@@ -56,6 +68,6 @@ export default function SignUpHome() {
 			>
 				Next
 			</Link>
-		</div>
+		</m.div>
 	);
 }

@@ -13,6 +13,7 @@ export default defineConfig({
 			"@layout": resolve(__dirname, "./src/layout"),
 			"@utils": resolve(__dirname, "./src/utils"),
 			"@hooks": resolve(__dirname, "./src/hooks"),
+			"@animation": resolve(__dirname, "./src/animation"),
 		},
 	},
 	server: {

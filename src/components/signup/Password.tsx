@@ -1,28 +1,41 @@
+import { slideInOut } from "@animation/animate";
 import InputBox from "@components/InputBox";
-import { useSession } from "@hooks/Storage";
+import { useLocalStorage, useSession } from "@hooks/Storage";
 import {
 	checkEmail,
 	checkPassword,
 	validEmail,
 	validPassword,
 } from "@utils/functions";
-import { ChangeEvent, createRef, useState } from "react";
+import { motion as m } from "framer-motion";
+import { ChangeEvent, MouseEvent, createRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Password() {
+	const local = useLocalStorage();
 	const session = useSession();
 
-	const [email, setEmail] = useState(checkEmail(session.get("email")));
+	const [email, setEmail] = useState(checkEmail(local.get("email")));
 	const [password, setPassword] = useState(
-		checkPassword(session.get("password")),
+		checkPassword(local.get("password")),
 	);
 
-	const isEmailSet = session.get("email").length != 0;
+	const isEmailSet = local.get("email").length != 0;
 
 	const passwordRef = createRef<HTMLInputElement>();
 
 	return (
-		<div className="mx-auto my-20 flex w-[min(28rem,100%)] origin-right translate-x-10 flex-col transition-transform">
+		<m.div
+			variants={slideInOut}
+			initial="initial"
+			animate="animate"
+			exit="exit"
+			transition={{
+				duration: 0.4,
+				delay: 0,
+			}}
+			className="mx-auto my-20 flex w-[clamp(15rem,90%,25rem)] flex-col"
+		>
 			<p className="text-xs uppercase">
 				Step&nbsp;<span className="font-semibold">1</span>
 				&nbsp;of&nbsp;
@@ -43,7 +56,7 @@ export default function Password() {
 					</p>
 					<div>
 						Email
-						<p className="font-semibold">{session.get("email")}</p>
+						<p className="font-semibold">{local.get("email")}</p>
 					</div>
 				</div>
 			)}
@@ -120,7 +133,13 @@ export default function Password() {
 
 				<Link
 					to={"/signup/"}
-					onClick={() => {
+					onClick={(event: MouseEvent) => {
+						if (!(validEmail(email) && validPassword(password)))
+							event.preventDefault();
+
+						local.set("email", email);
+						local.set("password", password);
+
 						session.set("email", email);
 						session.set("password", password);
 					}}
@@ -129,6 +148,6 @@ export default function Password() {
 					Next
 				</Link>
 			</div>
-		</div>
+		</m.div>
 	);
 }

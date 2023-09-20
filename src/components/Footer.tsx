@@ -39,7 +39,7 @@ export default function Footer({ textLink }: FooterProps) {
 		// 	<p className="py-3">Netflix India</p>
 		// </div>
 
-		<footer className="w-full bg-zinc-100 px-4 py-8 text-slate-600 dark:bg-zinc-900 dark:text-zinc-300 sm:px-10 md:px-16 lg:px-20 xl:mx-auto">
+		<footer className="mt-auto w-full bg-zinc-100 px-4 py-8 text-slate-600 dark:bg-zinc-900 dark:text-zinc-300 sm:px-10 md:px-16 lg:px-20 xl:mx-auto">
 			<div className="footer text-[#737373]">
 				<div className="tel mb-7 py-3">
 					Questions? Call&nbsp;

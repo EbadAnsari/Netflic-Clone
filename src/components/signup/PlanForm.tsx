@@ -1,4 +1,6 @@
+import { slideInOut } from "@animation/animate";
 import { useSession } from "@hooks/Storage";
+import { motion as m } from "framer-motion";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -59,7 +61,18 @@ export default function PlanForm() {
 	}
 
 	return (
-		<div className="mx-auto my-16 w-80 sm:w-[35rem] lg:w-[58rem] xl:w-[65rem]">
+		<m.div
+			variants={slideInOut}
+			initial="initial"
+			animate="animate"
+			exit="exit"
+			transition={{
+				duration: 0.4,
+				delay: 0,
+			}}
+			key={location.pathname}
+			className="mx-auto my-16 w-80 sm:w-[35rem] lg:w-[58rem] xl:w-[65rem]"
+		>
 			<p className="text-xs uppercase">
 				Step&nbsp;<span className="font-semibold">3</span>
 				&nbsp;of&nbsp;
@@ -179,6 +192,6 @@ export default function PlanForm() {
 			>
 				Next
 			</button>
-		</div>
+		</m.div>
 	);
 }

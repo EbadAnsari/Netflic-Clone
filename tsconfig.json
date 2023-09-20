@@ -28,7 +28,8 @@
 			"@store/*": ["store/*"],
 			"@layout/*": ["layout/*"],
 			"@utils/*": ["utils/*"],
-			"@hooks/*": ["hooks/*"]
+			"@hooks/*": ["hooks/*"],
+			"@animation/*": ["animation/*"]
 		}
 	},
 	"include": ["src"],
