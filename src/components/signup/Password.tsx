@@ -23,17 +23,11 @@ export default function Password() {
 	const isEmailSet = local.get("email").length != 0;
 
 	const passwordRef = createRef<HTMLInputElement>();
+	const emailRef = createRef<HTMLInputElement>();
 
 	return (
 		<m.div
-			variants={slideInOut}
-			initial="initial"
-			animate="animate"
-			exit="exit"
-			transition={{
-				duration: 0.4,
-				delay: 0,
-			}}
+			{...slideInOut}
 			className="mx-auto my-20 flex w-[clamp(15rem,90%,25rem)] flex-col"
 		>
 			<p className="text-xs uppercase">
@@ -66,6 +60,7 @@ export default function Password() {
 						label="Email"
 						type="email"
 						name="email"
+						ref={emailRef}
 						value={email}
 						className="[&+span.error]:text-red-500 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
 						error={
@@ -92,6 +87,9 @@ export default function Password() {
 					name="password"
 					ref={passwordRef}
 					value={password}
+					onSubmit={() => {
+						console.log("hello");
+					}}
 					className="mt-4 [&+span.error]:text-red-500 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
 					error={
 						validPassword(password) || password.length === 0
@@ -134,8 +132,16 @@ export default function Password() {
 				<Link
 					to={"/signup/"}
 					onClick={(event: MouseEvent) => {
-						if (!(validEmail(email) && validPassword(password)))
+						if (!validEmail(email)) {
+							emailRef.current?.focus();
 							event.preventDefault();
+							return;
+						}
+						if (!validPassword(password)) {
+							passwordRef.current?.focus();
+							event.preventDefault();
+							return;
+						}
 
 						local.set("email", email);
 						local.set("password", password);

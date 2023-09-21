@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import {
 	ActionFunctionArgs,
 	Form,
+	Link,
 	redirect,
 	useActionData,
 } from "react-router-dom";
@@ -30,7 +31,7 @@ export default function SignIn() {
 
 	const { checkBox, checked } = useCheckBox(true);
 
-	const action = useActionData() as InputError & CredentialError;
+	// const action = useActionData() as InputError & CredentialError;
 
 	const dispatch = useDispatch();
 
@@ -153,9 +154,12 @@ export default function SignIn() {
 							New to Netflix?
 						</label>
 						&nbsp;
-						<a className="cursor-pointer text-white hover:underline">
+						<Link
+							to={"/in"}
+							className="cursor-pointer text-white hover:underline"
+						>
 							Sign up now
-						</a>
+						</Link>
 						<span className="cursor-pointer text-white">.</span>
 					</p>
 					<p className="my-3 text-xs text-[#8c8c8c]">
@@ -176,12 +180,9 @@ export async function SignInAction({
 	const email = data.get("email") as string;
 	const password = data.get("password") as string;
 	const rememberMe = !!parseInt(data.get("set-session") as string);
-	const isAuthenticated = true;
 
-	if (rememberMe) {
-		localStorage.setItem("email", email);
-		localStorage.setItem("password", password);
-	} else localStorage.clear();
+	// fetch api.
+	const isAuthenticated = true;
 
 	const emailErrorCheck = !(email && checkEmail(email));
 	const passwordErrorCheck = !(password && checkPassword(password));
@@ -199,8 +200,16 @@ export async function SignInAction({
 		return { invalidCredentials: false };
 	}
 
+	if (rememberMe) {
+		localStorage.setItem("email", email);
+		localStorage.setItem("password", password);
+	} else {
+		localStorage.removeItem("email");
+		localStorage.removeItem("password");
+	}
+
 	sessionStorage.setItem("email", email);
 	sessionStorage.setItem("password", password);
 
-	return redirect("/signup");
+	return redirect("/");
 }

@@ -3,6 +3,7 @@ import { close } from "@store/slice/TrailerModalSlice";
 import { secondsToMinutes } from "@utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 import PlayButton from "./PlayButton";
+import { motion as m } from "framer-motion";
 
 export default function TrailerModal({
 	title,
@@ -21,7 +22,7 @@ export default function TrailerModal({
 	const { minute: trailerInMinutes } = secondsToMinutes(duration);
 
 	return (
-		<section className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
+		<m.section className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
 			<div className="relative w-[calc(100%_-_2rem)] overflow-hidden rounded-md bg-zinc-900 md:w-min">
 				<div className="modal-video relative aspect-video w-full md:h-[27rem] md:w-auto">
 					<video
@@ -67,6 +68,6 @@ export default function TrailerModal({
 					<p className="w-fit">{description}</p>
 				</div>
 			</div>
-		</section>
+		</m.section>
 	);
 }

@@ -75,6 +75,10 @@ export function useTheme() {
 	};
 }
 
-export function getDevice() {
-	// return screen.orientation.type ===
+export function isMobileDevice() {
+	return (
+		navigator.maxTouchPoints > 0 &&
+		/Android|iPhone/i.test(navigator.userAgent) &&
+		matchMedia("(pointer:coarse)").matches
+	);
 }

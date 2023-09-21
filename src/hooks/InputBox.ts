@@ -18,7 +18,6 @@ export function useInputRef(focused: boolean = false) {
 		isFocus = true;
 		inputElement?.focus();
 		labelElement?.classList.add("input-email-focus");
-		console.log("focus");
 	});
 	const leave = useRef(() => {
 		if (inputElement?.value.length !== 0) return;

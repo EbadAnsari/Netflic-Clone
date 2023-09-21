@@ -11,4 +11,8 @@ export const slideInOut = {
 		translateX: -20,
 		opacity: 0,
 	},
+	transition: {
+		duration: 0.4,
+		delay: 0,
+	},
 };

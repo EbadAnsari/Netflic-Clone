@@ -11,14 +11,7 @@ export default function SignUpHome() {
 	}
 	return (
 		<m.div
-			variants={slideInOut}
-			initial="initial"
-			animate="animate"
-			exit="exit"
-			transition={{
-				duration: 0.4,
-				delay: 0.1,
-			}}
+			{...slideInOut}
 			className="mx-auto my-20 flex w-80 flex-col items-center"
 		>
 			<div className="mx-auto w-fit rounded-full border-[3px] border-netflix-red p-2">

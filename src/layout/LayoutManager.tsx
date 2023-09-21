@@ -1,7 +1,7 @@
-import PlanForm from "@components/signup/PlanForm";
 import LandingSignIn, { SignInAction } from "@components/landing-page/SignIn";
 import LandingSignUp, { SignUpAction } from "@components/landing-page/SignUp";
 import Password from "@components/signup/Password";
+import PlanForm from "@components/signup/PlanForm";
 import SignUpHome from "@components/signup/SignUpHome";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";

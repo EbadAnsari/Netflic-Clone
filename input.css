@@ -36,6 +36,7 @@ select {
 }
 
 .checkbox-on::after {
+	filter: contrast(100);
 	background-image: url("/public/icons/checkbox-tick.svg");
 }
 

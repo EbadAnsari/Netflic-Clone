@@ -62,14 +62,11 @@ export default function PlanForm() {
 
 	return (
 		<m.div
-			variants={slideInOut}
-			initial="initial"
-			animate="animate"
-			exit="exit"
-			transition={{
-				duration: 0.4,
-				delay: 0,
-			}}
+			{...slideInOut}
+			// variants={slideInOut}
+			// initial="initial"
+			// animate="animate"
+			// exit="exit"
 			key={location.pathname}
 			className="mx-auto my-16 w-80 sm:w-[35rem] lg:w-[58rem] xl:w-[65rem]"
 		>
