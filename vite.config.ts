@@ -14,6 +14,12 @@ export default defineConfig({
 			"@utils": resolve(__dirname, "./src/utils"),
 			"@hooks": resolve(__dirname, "./src/hooks"),
 			"@animation": resolve(__dirname, "./src/animation"),
+			"@routes": resolve(__dirname, "./src/components/routes"),
+			"@context": resolve(__dirname, "./src/context"),
+			"@firebase-config": resolve(
+				__dirname,
+				"./src/config/firebase-config.ts",
+			),
 		},
 	},
 	server: {

@@ -3,6 +3,10 @@ export interface Variantinterface {
 	name: string;
 }
 
+export interface BaseObject {
+	[key: string]: string;
+}
+
 export type Prettify<T> = {
 	[key in keyof T]: T[key];
 } & {};
@@ -51,3 +55,8 @@ export interface Time {
 export type ThemeType = "light" | "dark" | "";
 
 export type NavigateType = { current: 1 | 2 | 3 };
+
+export interface UserInterface {
+	email: string;
+	password: string;
+}

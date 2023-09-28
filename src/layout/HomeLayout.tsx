@@ -1,14 +1,12 @@
 import Footer from "@components/Footer";
-import TrailerModal from "@components/TrailerModal";
 import Navbar from "@components/Navbar";
 import PlayButton from "@components/PlayButton";
+import TrailerModal from "@components/TrailerModal";
 import { useSession } from "@hooks/Storage";
 import { add, close } from "@store/slice/TrailerModalSlice";
+import { useTheme } from "@utils/functions";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
-import VideoPlay from "@components/VideoPlay";
-import { useTheme } from "@utils/functions";
 
 export default function HomeLayout() {
 	const session = useSession();
@@ -18,9 +16,9 @@ export default function HomeLayout() {
 
 	theme.setTheme("dark");
 
-	if (!(session.get("email") && session.get("password"))) {
-		return <Navigate to={"/in"} />;
-	}
+	// if (!(session.get("email") && session.get("password"))) {
+	// 	return <Navigate to={"/in"} />;
+	// }
 
 	useEffect(() => {
 		dispatch(close());

@@ -1,30 +1,6 @@
 import { useInputRef } from "@hooks/InputBox";
-import {
-	ChangeEvent,
-	ClassAttributes,
-	ForwardedRef,
-	InputHTMLAttributes,
-	ReactNode,
-	forwardRef,
-	useEffect,
-} from "react";
-
-export interface InputBoxStatus {
-	error:
-		| { isError: false }
-		| { isError: true; color?: string; message: string };
-	sucess: { isSucess: boolean; color?: string };
-}
-
-export interface InputBoxProps {
-	label: string;
-	component?: ReactNode;
-}
-
-export type InputBoxInterface = InputBoxProps &
-	InputBoxStatus &
-	ClassAttributes<HTMLInputElement> &
-	InputHTMLAttributes<HTMLInputElement>;
+import { InputBoxInterface } from "@interfaces/InputBoxInterace";
+import { ChangeEvent, ForwardedRef, forwardRef, useEffect } from "react";
 
 const InputBox = forwardRef(
 	(InputProps: InputBoxInterface, ref?: ForwardedRef<HTMLInputElement>) => {
@@ -44,7 +20,7 @@ const InputBox = forwardRef(
 			<div className="w-full">
 				<div
 					ref={inputBox}
-					className={`input-box-container ${InputProps.className} ${
+					className={`${InputProps.className} ${
 						InputProps.error.isError && "sign-in-error-input"
 					} relative rounded`}
 				>

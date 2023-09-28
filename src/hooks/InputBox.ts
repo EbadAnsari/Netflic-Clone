@@ -15,9 +15,11 @@ export function useInputRef(focused: boolean = false) {
 	let isFocus = false;
 
 	const focus = useRef(() => {
+		if (!(inputElement && labelElement)) return;
+
 		isFocus = true;
-		inputElement?.focus();
-		labelElement?.classList.add("input-email-focus");
+		inputElement.focus();
+		labelElement.classList.add("input-email-focus");
 	});
 	const leave = useRef(() => {
 		if (inputElement?.value.length !== 0) return;
@@ -29,16 +31,20 @@ export function useInputRef(focused: boolean = false) {
 		focus.current = focus.current;
 		leave.current = leave.current;
 
-		inputElement = inputBox.current?.children[0] as HTMLInputElement;
-		labelElement = inputBox.current?.children[1];
+		if (!inputBox.current) return;
 
-		if (!(inputBox.current && inputElement && labelElement)) return;
+		inputElement = inputBox.current.children[0] as HTMLInputElement;
+		labelElement = inputBox.current.children[1];
+
+		if (!(inputElement && labelElement)) return;
 
 		if (focused) {
 			focus.current();
 		}
 
 		document.body.onclick = function (event: Event) {
+			if (!(inputBox.current && inputElement && labelElement)) return;
+
 			if (isFocus) {
 				event.stopImmediatePropagation();
 				isFocus = false;
@@ -46,12 +52,12 @@ export function useInputRef(focused: boolean = false) {
 			}
 
 			if (
-				inputBox.current?.contains(event.target as Node) ||
-				inputElement?.value.length !== 0
+				inputBox.current.contains(event.target as Node) ||
+				inputElement.value.length !== 0
 			) {
-				labelElement?.classList.add("input-email-focus");
+				labelElement.classList.add("input-email-focus");
 			} else if (inputElement.value === "") {
-				labelElement?.classList.remove("input-email-focus");
+				labelElement.classList.remove("input-email-focus");
 			}
 		};
 

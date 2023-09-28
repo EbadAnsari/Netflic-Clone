@@ -1,28 +1,30 @@
-import LandingSignIn, { SignInAction } from "@components/landing-page/SignIn";
-import LandingSignUp, { SignUpAction } from "@components/landing-page/SignUp";
-import Password from "@components/signup/Password";
-import PlanForm from "@components/signup/PlanForm";
-import SignUpHome from "@components/signup/SignUpHome";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";
+import LandingSignIn, { SignInAction } from "@routes/landing-page/SignIn";
+import LandingSignUp, { SignUpAction } from "@routes/landing-page/SignUp";
+import Password from "@routes/signup/Password";
+import PlanForm from "@routes/signup/PlanForm";
+import SignUpHome from "@routes/signup/SignUpHome";
 import {
 	Route,
 	RouterProvider,
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
-import SignUpLayout from "./SignUpLayout";
+import SignUpLayout from "@layout/SignUpLayout";
+import PrivateRoute from "@components/routes/PrivateRoute";
 
+console.log("as");
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/">
-			<Route index element={<HomeLayout />}></Route>
-			<Route path="in" element={<LandingPage />}>
-				<Route
-					index
-					element={<LandingSignUp />}
-					action={SignUpAction}
-				></Route>
+			<Route
+				element={<PrivateRoute element={<HomeLayout />} />}
+				index
+			></Route>
+			{/* <Route index element={<HomeLayout />}></Route> */}
+			<Route path="in" action={SignUpAction} element={<LandingPage />}>
+				<Route index element={<LandingSignUp />}></Route>
 				<Route
 					path="login"
 					action={SignInAction}

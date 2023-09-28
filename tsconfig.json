@@ -29,7 +29,10 @@
 			"@layout/*": ["layout/*"],
 			"@utils/*": ["utils/*"],
 			"@hooks/*": ["hooks/*"],
-			"@animation/*": ["animation/*"]
+			"@animation/*": ["animation/*"],
+			"@routes/*": ["components/routes/*"],
+			"@context/*": ["context/*"],
+			"@firebase-config": ["config/firebase-config.ts"]
 		}
 	},
 	"include": ["src"],

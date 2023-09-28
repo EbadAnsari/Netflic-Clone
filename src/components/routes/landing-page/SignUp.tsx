@@ -1,29 +1,32 @@
 import { useInputRef } from "@hooks/InputBox";
-import { useLocalStorage, useSession } from "@hooks/Storage";
 import { signIn } from "@store/slice/SigningSlice";
+import {
+	RememberMeValues,
+	getRememberMe,
+	setRememberMe,
+} from "@utils/RememberMe";
 import { checkEmail, validEmail } from "@utils/functions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ActionFunctionArgs, Form, Link, redirect } from "react-router-dom";
-import InputBox from "../InputBox";
+import { ActionFunctionArgs, Form, redirect } from "react-router-dom";
+import InputBox from "@components/InputBox";
 
 export default function SignUp() {
-	const local = useLocalStorage();
-	const [email, setEmail] = useState(local.get("email"));
-
-	const session = useSession();
+	const [email, setEmail] = useState(getRememberMe(RememberMeValues.email));
 
 	const { focus } = useInputRef(email.length !== 0);
 
-	if (validEmail(email)) local.set("email", email);
+	if (validEmail(email)) getRememberMe(RememberMeValues.email);
 
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (validEmail(email)) {
 			focus.current();
 		}
 		dispatch(signIn());
 	}, []);
+
 	return (
 		<section className="grid grid-cols-12">
 			<div className="-z-10 col-span-12 col-start-1 row-start-1 w-full justify-center overflow-hidden md:h-[540px] lg:h-[720px]">
@@ -48,7 +51,11 @@ export default function SignUp() {
 						Ready to watch? Enter your email to create or restart
 						your membership.
 					</p>
-					<div className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch">
+					<Form
+						action="/in"
+						method="POST"
+						className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch"
+					>
 						<InputBox
 							autoComplete="email"
 							type="email"
@@ -73,17 +80,10 @@ export default function SignUp() {
 									  }
 							}
 						/>
-						<Link
-							to={"/signup/password"}
-							onClick={() => {
-								focus.current();
-								session.set("email", email);
-							}}
-							className="h-fit cursor-pointer whitespace-nowrap rounded-[4px] bg-[#e50914] px-5 py-3 text-lg font-semibold text-white sm:px-7 sm:text-2xl"
-						>
+						<button className="h-fit cursor-pointer whitespace-nowrap rounded-[4px] bg-[#e50914] px-5 py-3 text-lg font-semibold text-white sm:px-7 sm:text-2xl">
 							Get Started &gt;
-						</Link>
-					</div>
+						</button>
+					</Form>
 				</div>
 			</div>
 		</section>
@@ -96,7 +96,8 @@ export async function SignUpAction({ request }: ActionFunctionArgs) {
 	const email = data.get("email") as string;
 
 	sessionStorage.setItem("email", email);
-	localStorage.setItem("email", email);
 
-	if (checkEmail(email)) return redirect("/login");
+	setRememberMe(RememberMeValues.email, email);
+
+	if (checkEmail(email)) return redirect("/signup/password");
 }

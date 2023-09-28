@@ -1,7 +1,8 @@
+import InputBox from "@components/InputBox";
 import { useCheckBox } from "@hooks/CheckBox";
-import { useLocalStorage } from "@hooks/Storage";
 import { CredentialError, InputError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
+import { RememberMeValues, getRememberMe } from "@utils/RememberMe";
 import {
 	checkEmail,
 	checkPassword,
@@ -10,28 +11,19 @@ import {
 } from "@utils/functions";
 import { ChangeEvent, createRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-	ActionFunctionArgs,
-	Form,
-	Link,
-	redirect,
-	useActionData,
-} from "react-router-dom";
-import InputBox from "../InputBox";
+import { ActionFunctionArgs, Form, Link, redirect } from "react-router-dom";
 
 export default function SignIn() {
-	const local = useLocalStorage();
-
-	const [email, setEmail] = useState(checkEmail(local.get("email")));
+	const [email, setEmail] = useState(
+		checkEmail(getRememberMe(RememberMeValues.email)),
+	);
 	const [password, setPassword] = useState(
-		checkPassword(local.get("password")),
+		checkPassword(getRememberMe(RememberMeValues.password)),
 	);
 
 	const passwordRef = createRef<HTMLInputElement>();
 
 	const { checkBox, checked } = useCheckBox(true);
-
-	// const action = useActionData() as InputError & CredentialError;
 
 	const dispatch = useDispatch();
 
@@ -51,7 +43,7 @@ export default function SignIn() {
 
 			<div className="signin-body z-20 mx-auto flex w-full flex-col bg-black px-6 pt-24 md:my-20 md:mt-24 md:w-[450px] md:bg-opacity-75 md:px-16 md:py-10">
 				<h1 className="mb-7 text-3xl font-bold text-white">Sign In</h1>
-				<Form method="POST" action="/sign/in">
+				<Form method="POST" action="/in/login">
 					<InputBox
 						label="Email"
 						type="email"
@@ -179,37 +171,11 @@ export async function SignInAction({
 
 	const email = data.get("email") as string;
 	const password = data.get("password") as string;
-	const rememberMe = !!parseInt(data.get("set-session") as string);
 
 	// fetch api.
-	const isAuthenticated = true;
+	// auth.
 
-	const emailErrorCheck = !(email && checkEmail(email));
-	const passwordErrorCheck = !(password && checkPassword(password));
-
-	if (emailErrorCheck || passwordErrorCheck) {
-		redirect("/in");
-		return {
-			emailErrorCheck,
-			passwordErrorCheck,
-		};
-	}
-
-	if (!isAuthenticated) {
-		redirect("/sign/in");
-		return { invalidCredentials: false };
-	}
-
-	if (rememberMe) {
-		localStorage.setItem("email", email);
-		localStorage.setItem("password", password);
-	} else {
-		localStorage.removeItem("email");
-		localStorage.removeItem("password");
-	}
-
-	sessionStorage.setItem("email", email);
-	sessionStorage.setItem("password", password);
+	console.log(email);
 
 	return redirect("/");
 }
