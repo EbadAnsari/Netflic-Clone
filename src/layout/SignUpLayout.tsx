@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
 	const theme = useTheme();
-	theme.setTheme(theme.theme());
+	theme.setTheme("light");
 
 	return (
 		<section className="flex h-full flex-col">

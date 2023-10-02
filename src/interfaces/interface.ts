@@ -30,13 +30,10 @@ export interface AppState {
 	modal: TrailerModalState;
 }
 
-export interface InputError {
-	emailErrorCheck?: boolean;
-	passwordErrorCheck?: boolean;
-}
-export interface CredentialError {
-	invalidCredentials: boolean;
-}
+export type CredentialError = {
+	invalidCredentials?: boolean;
+	errorFromServer?: boolean;
+};
 
 export interface ModalProps {
 	title: string;

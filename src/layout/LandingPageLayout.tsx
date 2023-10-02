@@ -14,7 +14,6 @@ export default function LandingPage() {
 	const dispatch = useDispatch();
 
 	const theme = useTheme();
-
 	theme.setTheme("dark");
 
 	const questionAndAnswer = [

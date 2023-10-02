@@ -1,14 +1,8 @@
 import { slideInOut } from "@animation/animate";
-import { useSession } from "@hooks/Storage";
 import { motion as m } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function SignUpHome() {
-	const session = useSession();
-
-	if (!session.get("password")) {
-		return <Navigate to={"/signup/password"} />;
-	}
 	return (
 		<m.div
 			{...slideInOut}
@@ -56,7 +50,7 @@ export default function SignUpHome() {
 			</div>
 
 			<Link
-				to="planform"
+				to="/signup/planform"
 				className="mt-10 w-full select-none rounded bg-netflix-red px-12 py-4 text-center text-2xl text-white hover:bg-netflix-red-hover"
 			>
 				Next

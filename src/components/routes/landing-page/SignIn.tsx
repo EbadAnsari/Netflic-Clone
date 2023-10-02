@@ -1,6 +1,8 @@
+import Alert from "@components/Alert";
 import InputBox from "@components/InputBox";
+import { login } from "@context/AuthContext";
 import { useCheckBox } from "@hooks/CheckBox";
-import { CredentialError, InputError } from "@interfaces/interface";
+import { CredentialError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
 import { RememberMeValues, getRememberMe } from "@utils/RememberMe";
 import {
@@ -11,12 +13,20 @@ import {
 } from "@utils/functions";
 import { ChangeEvent, createRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ActionFunctionArgs, Form, Link, redirect } from "react-router-dom";
+import {
+	ActionFunctionArgs,
+	Form,
+	Link,
+	redirect,
+	useActionData,
+	useNavigate,
+} from "react-router-dom";
 
 export default function SignIn() {
 	const [email, setEmail] = useState(
 		checkEmail(getRememberMe(RememberMeValues.email)),
 	);
+
 	const [password, setPassword] = useState(
 		checkPassword(getRememberMe(RememberMeValues.password)),
 	);
@@ -26,6 +36,8 @@ export default function SignIn() {
 	const { checkBox, checked } = useCheckBox(true);
 
 	const dispatch = useDispatch();
+
+	const action = useActionData() as CredentialError;
 
 	useEffect(() => {
 		dispatch(signUp());
@@ -44,6 +56,13 @@ export default function SignIn() {
 			<div className="signin-body z-20 mx-auto flex w-full flex-col bg-black px-6 pt-24 md:my-20 md:mt-24 md:w-[450px] md:bg-opacity-75 md:px-16 md:py-10">
 				<h1 className="mb-7 text-3xl font-bold text-white">Sign In</h1>
 				<Form method="POST" action="/in/login">
+					{action && (
+						<Alert
+							className="mb-4"
+							text="Invalid Credential."
+							type="error"
+						/>
+					)}
 					<InputBox
 						label="Email"
 						type="email"
@@ -116,6 +135,22 @@ export default function SignIn() {
 					<input
 						value="Sign In"
 						type="submit"
+						onClick={(event) => {
+							if (
+								!validEmail(getRememberMe("email")) &&
+								validPassword(getRememberMe("password"))
+							) {
+								event.preventDefault();
+								// 	try {
+								// 		console.log(await login(email, password));
+								// 		navigate("/");
+								// 	} catch {
+								// 		navigate("/in/login");
+								// 	}
+								// } else {
+								// 	setError(true);
+							}
+						}}
 						className="mt-8 flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded bg-[#e50914] p-4 py-3 text-[16px] font-medium text-white transition-all"
 					/>
 					<div className="mt-4 flex justify-between">
@@ -166,16 +201,18 @@ export default function SignIn() {
 
 export async function SignInAction({
 	request,
-}: ActionFunctionArgs): Promise<InputError | CredentialError | Response> {
+}: ActionFunctionArgs): Promise<CredentialError | Response> {
 	const data = await request.formData();
 
 	const email = data.get("email") as string;
 	const password = data.get("password") as string;
 
-	// fetch api.
-	// auth.
+	console.log("asdfs");
 
-	console.log(email);
-
-	return redirect("/");
+	try {
+		await login(email, password);
+		return redirect("/");
+	} catch {
+		return { invalidCredentials: true };
+	}
 }

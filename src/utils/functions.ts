@@ -43,11 +43,6 @@ export async function sleep(duration: number) {
 	});
 }
 
-export function logOut() {
-	sessionStorage.removeItem("email");
-	sessionStorage.removeItem("password");
-}
-
 export function useTheme() {
 	let currentTheme: ThemeType = "";
 
@@ -81,4 +76,8 @@ export function isMobileDevice() {
 		/Android|iPhone/i.test(navigator.userAgent) &&
 		matchMedia("(pointer:coarse)").matches
 	);
+}
+
+export function titlCase(text: string) {
+	return text.at(0)?.toUpperCase() + text.substring(1);
 }

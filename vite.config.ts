@@ -23,6 +23,6 @@ export default defineConfig({
 		},
 	},
 	server: {
-		open: "/in",
+		open: "/signup/planform",
 	},
 });

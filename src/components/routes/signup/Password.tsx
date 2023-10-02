@@ -1,6 +1,9 @@
 import { slideInOut } from "@animation/animate";
+import Alert from "@components/Alert";
 import InputBox from "@components/InputBox";
 import { useLocalStorage, useSession } from "@hooks/Storage";
+import { CredentialError } from "@interfaces/interface";
+import { getRememberMe, setRememberMe } from "@utils/RememberMe";
 import {
 	checkEmail,
 	checkPassword,
@@ -9,21 +12,28 @@ import {
 } from "@utils/functions";
 import { motion as m } from "framer-motion";
 import { ChangeEvent, MouseEvent, createRef, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+	ActionFunctionArgs,
+	Form,
+	redirect,
+	useActionData,
+} from "react-router-dom";
 
 export default function Password() {
 	const local = useLocalStorage();
 	const session = useSession();
 
-	const [email, setEmail] = useState(checkEmail(local.get("email")));
+	const [email, setEmail] = useState(checkEmail(getRememberMe("email")));
 	const [password, setPassword] = useState(
-		checkPassword(local.get("password")),
+		checkPassword(getRememberMe("password")),
 	);
 
-	const isEmailSet = local.get("email").length != 0;
+	const isEmailSet = getRememberMe("email");
 
 	const passwordRef = createRef<HTMLInputElement>();
 	const emailRef = createRef<HTMLInputElement>();
+
+	const action = useActionData() as CredentialError;
 
 	return (
 		<m.div
@@ -43,18 +53,37 @@ export default function Password() {
 				Joining Netflix is easy.
 			</h1>
 
-			{isEmailSet && (
-				<div>
-					<p className="mb-5 text-lg">
-						Enter your password and you'll be watching in no time.
-					</p>
+			<Form action="/signup/password" method="POST">
+				{isEmailSet && (
 					<div>
-						Email
-						<p className="font-semibold">{local.get("email")}</p>
+						<p className="mb-5 text-lg">
+							Enter your password and you'll be watching in no
+							time.
+						</p>
+						{action && (
+							<Alert
+								className="mb-8"
+								text={
+									(action.errorFromServer &&
+										"Unable to login.") ||
+									(action.invalidCredentials &&
+										"Invalid credentials.")
+								}
+								type="error"
+							/>
+						)}
+						<div>
+							Email
+							<br />
+							<input
+								type="email"
+								name="email"
+								defaultValue={isEmailSet}
+								className="bg-transparent font-semibold"
+							/>
+						</div>
 					</div>
-				</div>
-			)}
-			<div>
+				)}
 				{!isEmailSet && (
 					<InputBox
 						label="Email"
@@ -129,31 +158,39 @@ export default function Password() {
 					}
 				/>
 
-				<Link
-					to={"/signup/"}
+				<button
+					type="submit"
 					onClick={(event: MouseEvent) => {
-						if (!validEmail(email)) {
-							emailRef.current?.focus();
+						if (!validEmail(email) || !validPassword(password)) {
 							event.preventDefault();
-							return;
-						}
-						if (!validPassword(password)) {
 							passwordRef.current?.focus();
-							event.preventDefault();
-							return;
+							emailRef.current?.focus();
+						} else {
+							setRememberMe("email", email);
+							setRememberMe("password", password);
 						}
-
-						local.set("email", email);
-						local.set("password", password);
-
-						session.set("email", email);
-						session.set("password", password);
 					}}
 					className="mx-auto mt-5 block w-full select-none rounded bg-netflix-red py-4 text-center text-2xl font-semibold text-white hover:bg-netflix-red-hover"
 				>
 					Next
-				</Link>
-			</div>
+				</button>
+			</Form>
 		</m.div>
 	);
+}
+export async function PasswordAction({
+	request,
+}: ActionFunctionArgs): Promise<CredentialError | Response> {
+	const data = await request.formData();
+
+	const email = data.get("email") as string;
+	const password = data.get("password") as string;
+
+	try {
+		// await login(email, password);
+		console.log({ email, password });
+		return redirect("/signup/");
+	} catch {
+		return { invalidCredentials: true };
+	}
 }

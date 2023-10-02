@@ -7,6 +7,7 @@ import { add, close } from "@store/slice/TrailerModalSlice";
 import { useTheme } from "@utils/functions";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import Chance from "chance";
 
 export default function HomeLayout() {
 	const session = useSession();
@@ -15,6 +16,12 @@ export default function HomeLayout() {
 	const theme = useTheme();
 
 	theme.setTheme("dark");
+
+	const chance = new Chance();
+
+	useEffect(() => {
+		console.log(chance.paragraph());
+	}, []);
 
 	// if (!(session.get("email") && session.get("password"))) {
 	// 	return <Navigate to={"/in"} />;
@@ -27,7 +34,13 @@ export default function HomeLayout() {
 	return (
 		<section className="bg-[#18181b]">
 			<Navbar />
-			<section className="banner relative">
+			<section
+				className="banner relative"
+				style={{
+					WebkitMask:
+						"linear-gradient(rgb(39 39 42) 70%, rgb(255 255 255 / 85%) 80%, transparent)",
+				}}
+			>
 				<video
 					className="h-[56.25vw] w-full object-cover brightness-[60%] transition duration-500"
 					src="/public/videos/temp/big-buck-bunny.mp4"

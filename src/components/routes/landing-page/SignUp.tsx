@@ -54,6 +54,11 @@ export default function SignUp() {
 					<Form
 						action="/in"
 						method="POST"
+						onSubmit={(event) => {
+							if (!validEmail(email)) {
+								event.preventDefault();
+							}
+						}}
 						className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch"
 					>
 						<InputBox
@@ -94,8 +99,6 @@ export async function SignUpAction({ request }: ActionFunctionArgs) {
 	const data = await request.formData();
 
 	const email = data.get("email") as string;
-
-	sessionStorage.setItem("email", email);
 
 	setRememberMe(RememberMeValues.email, email);
 

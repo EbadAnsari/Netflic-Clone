@@ -1,35 +1,46 @@
 import { auth } from "@utils/firebase-config";
-import { User, onAuthStateChanged } from "firebase/auth";
-import { PropsWithChildren, createContext, useEffect, useState } from "react";
+import {
+	User,
+	createUserWithEmailAndPassword,
+	onAuthStateChanged,
+	signInWithEmailAndPassword,
+	signOut,
+} from "firebase/auth";
+import {
+	PropsWithChildren,
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 
-export interface AuthenticationContextInterface {
-	signIn: (email: string, password: string) => void;
-	login: (email: string, password: string) => void;
-	currentUser: User | null;
+export function login(email: string, password: string) {
+	return createUserWithEmailAndPassword(auth, email, password);
+}
+export function signIn(email: string, password: string) {
+	return signInWithEmailAndPassword(auth, email, password);
+}
+export function logout() {
+	return signOut(auth);
 }
 
-export const AuthenticationContext =
-	createContext<AuthenticationContextInterface | null>(null);
+const AuthenticationContext = createContext<User | boolean | null>(true);
+
+export function useAuth() {
+	return useContext(AuthenticationContext);
+}
 
 export default function Authentication({ children }: PropsWithChildren) {
-	const [currentUser, setCurrentUser] = useState<User | null>(null);
+	const [currentUser, setCurrentUser] = useState<User | boolean | null>(true);
 
-	function login(email: string, password: string) {
-		console.log("Login with : ", { email, password });
-	}
-
-	function signIn(email: string, password: string) {
-		console.log("Sign In with : ", { email, password });
-	}
-
-	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			setCurrentUser(user);
-		});
-	}, []);
+	// useEffect(() => {
+	// 	onAuthStateChanged(auth, (user) => {
+	// 		setCurrentUser(user);
+	// 	});
+	// }, []);
 
 	return (
-		<AuthenticationContext.Provider value={{ currentUser, login, signIn }}>
+		<AuthenticationContext.Provider value={currentUser}>
 			{children}
 		</AuthenticationContext.Provider>
 	);

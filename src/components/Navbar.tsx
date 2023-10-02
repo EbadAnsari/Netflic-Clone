@@ -1,12 +1,15 @@
-import { logOut } from "@utils/functions";
+import { logout } from "@context/AuthContext";
 import { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import DropDown from "./DropDown";
 import ProfileIcon from "./ProfileIcon";
+import { useTheme } from "@utils/functions";
 
 export default function Navbar() {
 	const [opacity, setOpacity] = useState<number>(0);
 	const [logOutStatus, setLogOutStatus] = useState(false);
+
+	const theme = useTheme();
 
 	useEffect(() => {
 		window.onscroll = () => {
@@ -25,7 +28,7 @@ export default function Navbar() {
 			style={{
 				backgroundColor: `rgba(0, 0, 0, ${opacity})`,
 			}}
-			className="fixed left-0 top-0 z-50 flex w-full items-center justify-between bg-zinc-900 px-6 py-4 transition duration-500 md:px-16"
+			className="fixed left-0 top-0 z-50 flex w-full items-center justify-between bg-zinc-900 px-6 py-4 md:px-16"
 		>
 			<div className="left flex items-center gap-x-6">
 				<a
@@ -70,7 +73,7 @@ export default function Navbar() {
 					<Form
 						method="GET"
 						action="/sign/up"
-						onSubmit={logOut}
+						onSubmit={logout}
 						className={`${
 							logOutStatus ? "block" : "hidden"
 						} absolute right-6 top-full translate-y-3 bg-black py-5 text-white`}

@@ -1,9 +1,11 @@
+import PrivateRoute from "@components/routes/PrivateRoute";
+import Password, { PasswordAction } from "@components/routes/signup/Password";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";
+import SignUpLayout from "@layout/SignUpLayout";
 import LandingSignIn, { SignInAction } from "@routes/landing-page/SignIn";
 import LandingSignUp, { SignUpAction } from "@routes/landing-page/SignUp";
-import Password from "@routes/signup/Password";
-import PlanForm from "@routes/signup/PlanForm";
+import PlanForm, { PlanFormAction } from "@routes/signup/PlanForm";
 import SignUpHome from "@routes/signup/SignUpHome";
 import {
 	Route,
@@ -11,18 +13,16 @@ import {
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
-import SignUpLayout from "@layout/SignUpLayout";
-import PrivateRoute from "@components/routes/PrivateRoute";
 
-console.log("as");
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/">
 			<Route
-				element={<PrivateRoute element={<HomeLayout />} />}
 				index
+				element={
+					<PrivateRoute redirectTo="/in" element={<HomeLayout />} />
+				}
 			></Route>
-			{/* <Route index element={<HomeLayout />}></Route> */}
 			<Route path="in" action={SignUpAction} element={<LandingPage />}>
 				<Route index element={<LandingSignUp />}></Route>
 				<Route
@@ -32,9 +32,30 @@ const router = createBrowserRouter(
 				></Route>
 			</Route>
 			<Route path="signup" element={<SignUpLayout />}>
-				<Route index element={<SignUpHome />}></Route>
-				<Route path="planform" element={<PlanForm />}></Route>
-				<Route path="password" element={<Password />}></Route>
+				<Route
+					index
+					element={
+						<PrivateRoute
+							redirectTo="/signup/password"
+							element={<SignUpHome />}
+						/>
+					}
+				></Route>
+				<Route
+					path="planform"
+					element={
+						<PrivateRoute
+							redirectTo="/signup/password"
+							element={<PlanForm />}
+						/>
+					}
+					action={PlanFormAction}
+				></Route>
+				<Route
+					path="password"
+					element={<Password />}
+					action={PasswordAction}
+				></Route>
 			</Route>
 		</Route>,
 	),

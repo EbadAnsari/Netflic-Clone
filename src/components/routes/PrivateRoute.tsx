@@ -1,14 +1,14 @@
-import { AuthenticationContext } from "@context/AuthContext";
-import { useContext } from "react";
+import { useAuth } from "@context/AuthContext";
 import { Navigate, RouteProps } from "react-router-dom";
 
-export default function PrivateRoute({ element }: RouteProps) {
-	const context = useContext(AuthenticationContext);
+interface PrivateRouteProps {
+	redirectTo?: string;
+}
 
-	// if (!context?.currentUser) return <Navigate to={"/in/login"} />;
-
-	console.log("as");
-	console.log(element);
-
-	return element;
+export default function PrivateRoute({
+	element,
+	redirectTo,
+}: RouteProps & PrivateRouteProps) {
+	const authContext = useAuth();
+	return authContext ? element : <Navigate to={redirectTo ?? "/in"} />;
 }
