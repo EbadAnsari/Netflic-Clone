@@ -3,13 +3,10 @@ import { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import DropDown from "./DropDown";
 import ProfileIcon from "./ProfileIcon";
-import { useTheme } from "@utils/functions";
 
 export default function Navbar() {
 	const [opacity, setOpacity] = useState<number>(0);
 	const [logOutStatus, setLogOutStatus] = useState(false);
-
-	const theme = useTheme();
 
 	useEffect(() => {
 		window.onscroll = () => {
