@@ -11,6 +11,11 @@ body {
 	@apply text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100;
 }
 
+.scrollbar-none::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
 select {
 	-webkit-appearance: none;
 	appearance: none;
@@ -129,4 +134,8 @@ select {
 		@apply mr-2 w-5;
 		/* transform: scale(1); */
 	}
+}
+
+.hello {
+	translate: calc(0% - 1rem);
 }

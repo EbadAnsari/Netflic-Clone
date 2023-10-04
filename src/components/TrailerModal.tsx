@@ -2,8 +2,9 @@ import { ModalProps, TrailerModalState } from "@interfaces/interface";
 import { close } from "@store/slice/TrailerModalSlice";
 import { secondsToMinutes } from "@utils/functions";
 import { useDispatch, useSelector } from "react-redux";
-import PlayButton from "./PlayButton";
+import ImageButton from "./PlayButton";
 import { motion as m } from "framer-motion";
+import { popUp } from "@animation/animate";
 
 export default function TrailerModal({
 	title,
@@ -22,8 +23,11 @@ export default function TrailerModal({
 	const { minute: trailerInMinutes } = secondsToMinutes(duration);
 
 	return (
-		<m.section className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
-			<div className="relative w-[calc(100%_-_2rem)] overflow-hidden rounded-md bg-zinc-900 md:w-min">
+		<section className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
+			<m.div
+				{...popUp}
+				className="relative w-[calc(100%_-_3rem)] overflow-hidden rounded-md bg-zinc-900 sm:w-[calc(100%_-_5rem)] md:w-min"
+			>
 				<div className="modal-video relative aspect-video w-full md:h-[27rem] md:w-auto">
 					<video
 						src={videoSrc}
@@ -37,12 +41,12 @@ export default function TrailerModal({
 							{title}
 						</p>
 						<div className="flex items-center gap-4">
-							<PlayButton
+							<ImageButton
 								icon="/public/icons/play-icon.svg"
 								text="Play"
 							/>
 							<div className="aspect-square w-4 cursor-pointer rounded-full border-transparent md:w-9 md:border-2 md:border-white md:p-2">
-								<img src="/public/icons/plus-icon.svg" alt="" />
+								<img src="/public/icons/plus-icon.svg" />
 							</div>
 						</div>
 					</div>
@@ -53,7 +57,7 @@ export default function TrailerModal({
 						className="absolute right-[2%] top-[2%] rounded-full transition-colors"
 					>
 						<div className="aspect-square w-6 rotate-45 cursor-pointer rounded-full border-transparent p-1 sm:w-9 sm:border-2 sm:border-white">
-							<img src="/public/icons/plus-icon.svg" alt="" />
+							<img src="/public/icons/plus-icon.svg" />
 						</div>
 					</div>
 				</div>
@@ -67,7 +71,7 @@ export default function TrailerModal({
 					</div>
 					<p className="w-fit">{description}</p>
 				</div>
-			</div>
-		</m.section>
+			</m.div>
+		</section>
 	);
 }

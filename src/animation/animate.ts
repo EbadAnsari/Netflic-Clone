@@ -13,6 +13,19 @@ export const slideInOut = {
 	},
 	transition: {
 		duration: 0.4,
-		delay: 0,
+	},
+};
+
+export const popUp = {
+	initial: {
+		scale: 0.95,
+		opacity: 0,
+	},
+	animate: {
+		scale: 1,
+		opacity: 1,
+	},
+	transition: {
+		duration: 0.4,
 	},
 };

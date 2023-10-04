@@ -1,16 +1,15 @@
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
-import PlayButton from "@components/PlayButton";
+import ImageButton from "@components/PlayButton";
+import Scroller from "@components/Scroller";
 import TrailerModal from "@components/TrailerModal";
-import { useSession } from "@hooks/Storage";
 import { add, close } from "@store/slice/TrailerModalSlice";
 import { useTheme } from "@utils/functions";
+import Chance from "chance";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Chance from "chance";
 
 export default function HomeLayout() {
-	const session = useSession();
 	const dispatch = useDispatch();
 
 	const theme = useTheme();
@@ -20,52 +19,112 @@ export default function HomeLayout() {
 	const chance = new Chance();
 
 	useEffect(() => {
-		console.log(chance.paragraph());
-	}, []);
-
-	// if (!(session.get("email") && session.get("password"))) {
-	// 	return <Navigate to={"/in"} />;
-	// }
-
-	useEffect(() => {
 		dispatch(close());
 	}, []);
 
 	return (
 		<section className="bg-[#18181b]">
 			<Navbar />
-			<section
-				className="banner relative"
-				style={{
-					WebkitMask:
-						"linear-gradient(rgb(39 39 42) 70%, rgb(255 255 255 / 85%) 80%, transparent)",
-				}}
-			>
+			<section className="banner relative">
 				<video
-					className="h-[56.25vw] w-full object-cover brightness-[60%] transition duration-500"
+					className="h-[56.25vw] w-full object-cover brightness-[80%] transition duration-500"
 					src="/public/videos/temp/big-buck-bunny.mp4"
 					autoPlay
 					muted
 					loop
+					style={{
+						WebkitMask:
+							"linear-gradient(rgba(0, 0, 0, 1) 14%, rgba(0, 0, 0, 1) 54%, rgba(255, 255, 255, 0.6) 80%, transparent)",
+					}}
 				/>
-				<div className="absolute top-2/3 ml-10 flex w-max gap-3 dark:text-zinc-900">
-					<PlayButton
+				<div className="absolute top-2/3 ml-[5%] flex w-max gap-3 dark:text-zinc-900">
+					<ImageButton
 						icon="/public/icons/play-icon.svg"
 						text="Play"
-						className="w-full gap-2 [&>div]:w-9 [&>p]:text-xl"
+						className="w-full"
 					/>
-					<PlayButton
+					<ImageButton
 						onClick={() => {
 							dispatch(add());
 						}}
 						icon="/public/icons/info-icon.svg"
 						text="More info"
-						className="w-full gap-3 bg-white bg-opacity-40 text-white [&>div]:w-9 [&>p]:text-xl"
+						className="w-full bg-white bg-opacity-40 text-white"
 					/>
 				</div>
 			</section>
 
-			{/* <VideoPlay /> */}
+			<Scroller
+				title="Popular Shows"
+				className="mx-auto w-[max(90%,10rem)] max-w-[90rem]"
+			>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
+					<img
+						src="/public/images/big-buck-bunny.png"
+						alt="big-buck-bunny.png"
+					/>
+				</div>
+			</Scroller>
 
 			<TrailerModal
 				title="Big Buck Bunny"

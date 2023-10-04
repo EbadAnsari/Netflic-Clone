@@ -14,7 +14,7 @@ export default function Footer({ textLink }: FooterProps) {
 				<div className="tel mb-7 py-3">
 					Questions? Call&nbsp;
 					<a
-						className="font-semibold hover:underline"
+						className="font-semibold underline hover:underline"
 						href="tel:000-800-919-1694"
 					>
 						000-800-919-1694
@@ -30,7 +30,6 @@ export default function Footer({ textLink }: FooterProps) {
 				</div>
 				<div className="language w-fit pb-3 pt-8">
 					<SelectLanguage
-						// shrink={false}
 						className="rounded-lg px-3 [&_select]:py-3"
 						scale="1"
 					/>

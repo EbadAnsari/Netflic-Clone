@@ -11,7 +11,7 @@ export default function Navbar() {
 	useEffect(() => {
 		window.onscroll = () => {
 			const scroll = window.scrollY / 500;
-			const limit = 0.7;
+			const limit = 0.85;
 			setOpacity(scroll >= limit ? limit : scroll);
 		};
 
