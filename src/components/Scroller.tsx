@@ -15,13 +15,11 @@ export default function Scroller({
 	return (
 		<div className={`relative ${className}`}>
 			{title && (
-				<p className="pb-1 text-sm sm:pb-2 sm:text-base md:text-lg lg:text-xl">
-					{title}
-				</p>
+				<p className="text-sm sm:text-base md:text-lg">{title}</p>
 			)}
-			<div className="relative">
+			<div className="relative [&_div.scroller-button]:hover:bg-white [&_div.scroller-button]:hover:bg-opacity-10 [&_div.scroller-button]:hover:backdrop-blur-sm">
 				<div
-					className="absolute left-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2 hover:bg-white hover:bg-opacity-10 hover:backdrop-blur-sm"
+					className="scroller-button absolute left-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2"
 					onClick={() => {
 						if (scroller.current)
 							scroller.current.scrollLeft -= 300;
@@ -46,7 +44,7 @@ export default function Scroller({
 					})}
 				</div>
 				<div
-					className="absolute right-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2 hover:bg-white hover:bg-opacity-10 hover:backdrop-blur-sm"
+					className="scroller-button absolute right-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2"
 					onClick={() => {
 						if (scroller.current)
 							scroller.current.scrollLeft += 300;

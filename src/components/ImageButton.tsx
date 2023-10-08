@@ -14,12 +14,12 @@ export default function ImageButton({
 			onClick={(event) => {
 				onClick?.(event);
 			}}
-			className={`flex h-fit w-fit items-center justify-center rounded bg-white px-2 py-2 sm:rounded-md sm:px-4 ${className}`}
+			className={`flex h-fit w-fit cursor-pointer items-center justify-center rounded bg-white px-2 py-2 text-black sm:rounded-md sm:px-4 ${className}`}
 		>
-			<div className="w-4 sm:w-7 md:w-9">
+			<div className="w-5 sm:w-7 md:w-9">
 				<img src={icon} />
 			</div>
-			<p className="mx-2 w-max text-center text-sm sm:text-base md:text-xl">
+			<p className="mx-1 w-max text-center text-sm sm:mx-2 sm:text-base md:text-xl">
 				{text}
 			</p>
 		</div>

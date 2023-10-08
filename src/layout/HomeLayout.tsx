@@ -1,12 +1,12 @@
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
-import ImageButton from "@components/PlayButton";
+import ImageButton from "@components/ImageButton";
 import Scroller from "@components/Scroller";
 import TrailerModal from "@components/TrailerModal";
 import { add, close } from "@store/slice/TrailerModalSlice";
 import { useTheme } from "@utils/functions";
 import Chance from "chance";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export default function HomeLayout() {
@@ -54,77 +54,45 @@ export default function HomeLayout() {
 				</div>
 			</section>
 
-			<Scroller
-				title="Popular Shows"
-				className="mx-auto w-[max(90%,10rem)] max-w-[90rem]"
-			>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-				<div className="flex aspect-video h-full w-36 sm:w-40 md:w-56">
-					<img
-						src="/public/images/big-buck-bunny.png"
-						alt="big-buck-bunny.png"
-					/>
-				</div>
-			</Scroller>
+			<section className="mx-auto w-[max(90%,10rem)] max-w-[90rem] space-y-6">
+				<Scroller title="Popular Shows">
+					{(() => {
+						const children: ReactNode[] = [];
+						for (let i = 0; i < 10; i++)
+							children.push(
+								<div
+									className="flex aspect-video h-full w-36 sm:w-40 md:w-56"
+									key={i}
+								>
+									<img
+										src="/public/images/big-buck-bunny.png"
+										alt="big-buck-bunny.png"
+									/>
+								</div>,
+							);
+						return children;
+					})()}
+				</Scroller>
+
+				<Scroller title="Popular Shows">
+					{(() => {
+						const children: ReactNode[] = [];
+						for (let i = 0; i < 9; i++)
+							children.push(
+								<div
+									className="flex aspect-video h-full w-36 sm:w-40 md:w-56"
+									key={i}
+								>
+									<img
+										src="/public/images/big-buck-bunny.png"
+										alt="big-buck-bunny.png"
+									/>
+								</div>,
+							);
+						return children;
+					})()}
+				</Scroller>
+			</section>
 
 			<TrailerModal
 				title="Big Buck Bunny"

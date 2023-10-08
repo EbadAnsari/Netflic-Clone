@@ -2,7 +2,7 @@ import { ModalProps, TrailerModalState } from "@interfaces/interface";
 import { close } from "@store/slice/TrailerModalSlice";
 import { secondsToMinutes } from "@utils/functions";
 import { useDispatch, useSelector } from "react-redux";
-import ImageButton from "./PlayButton";
+import ImageButton from "./ImageButton";
 import { motion as m } from "framer-motion";
 import { popUp } from "@animation/animate";
 
@@ -61,9 +61,9 @@ export default function TrailerModal({
 						</div>
 					</div>
 				</div>
-				<div className="modal-content w-fit space-y-3 px-6 py-6 text-sm text-white sm:px-12 sm:py-8 sm:text-base">
+				<div className="modal-content w-fit space-y-2 p-5 py-4 text-xs text-white sm:space-y-3 sm:px-12 sm:py-8 sm:text-base">
 					<div className="flex items-center gap-3">
-						<p className="text-base font-semibold text-green-400 sm:text-lg">
+						<p className="font-semibold text-green-400 sm:text-lg">
 							New
 						</p>
 						<p>{trailerInMinutes + " min"}</p>

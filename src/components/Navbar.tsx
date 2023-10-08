@@ -39,13 +39,25 @@ export default function Navbar() {
 					/>
 				</a>
 				<div className="nav-links text-white">
-					<DropDown>
-						<a>Home</a>
-						<a>Series</a>
-						<a>Films</a>
-						<a>New & Popular</a>
-						<a>My List</a>
-						<a>Browse by Languages</a>
+					<DropDown title="Browse">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							Home
+						</a>
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							Series
+						</a>
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							Films
+						</a>
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							New & Popular
+						</a>
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							My List
+						</a>
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+							Browse by Languages
+						</a>
 					</DropDown>
 				</div>
 			</div>
@@ -73,7 +85,7 @@ export default function Navbar() {
 						onSubmit={logout}
 						className={`${
 							logOutStatus ? "block" : "hidden"
-						} absolute right-6 top-full translate-y-3 bg-black py-5 text-white`}
+						} absolute right-6 top-full translate-y-3 rounded-md bg-white bg-opacity-40 py-5 text-white backdrop-blur-lg md:rounded-lg`}
 					>
 						<div className="px-3">
 							<img
@@ -81,7 +93,7 @@ export default function Navbar() {
 								className="w-8 rounded-md"
 							/>
 						</div>
-						<hr className="my-4 border border-[#1f2937]" />
+						<hr className="mx-3 my-4 rounded-full border border-white border-opacity-10" />
 						<button
 							type="submit"
 							className="mx-10 block w-max cursor-pointer px-3 text-sm hover:underline"
