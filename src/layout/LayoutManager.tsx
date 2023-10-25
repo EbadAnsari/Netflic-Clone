@@ -1,11 +1,11 @@
 import PrivateRoute from "@components/routes/PrivateRoute";
-import Password, { PasswordAction } from "@components/routes/signup/Password";
+import Password from "@components/routes/signup/Password";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";
 import SignUpLayout from "@layout/SignUpLayout";
 import LandingSignIn, { SignInAction } from "@routes/landing-page/SignIn";
-import LandingSignUp, { SignUpAction } from "@routes/landing-page/SignUp";
-import PlanForm, { PlanFormAction } from "@routes/signup/PlanForm";
+import LandingSignUp from "@routes/landing-page/SignUp";
+import PlanForm from "@routes/signup/PlanForm";
 import SignUpHome from "@routes/signup/SignUpHome";
 import {
 	Route,
@@ -19,11 +19,14 @@ const router = createBrowserRouter(
 		<Route path="/">
 			<Route
 				index
-				element={
-					<PrivateRoute redirectTo="/in" element={<HomeLayout />} />
-				}
+				element={<PrivateRoute element={<HomeLayout />} />}
+				action={() => {
+					console.log("E");
+
+					return null;
+				}}
 			></Route>
-			<Route path="in" action={SignUpAction} element={<LandingPage />}>
+			<Route path="in" element={<LandingPage />}>
 				<Route index element={<LandingSignUp />}></Route>
 				<Route
 					path="login"
@@ -34,28 +37,10 @@ const router = createBrowserRouter(
 			<Route path="signup" element={<SignUpLayout />}>
 				<Route
 					index
-					element={
-						<PrivateRoute
-							redirectTo="/signup/password"
-							element={<SignUpHome />}
-						/>
-					}
+					element={<PrivateRoute element={<SignUpHome />} />}
 				></Route>
-				<Route
-					path="planform"
-					element={
-						<PrivateRoute
-							redirectTo="/signup/password"
-							element={<PlanForm />}
-						/>
-					}
-					action={PlanFormAction}
-				></Route>
-				<Route
-					path="password"
-					element={<Password />}
-					action={PasswordAction}
-				></Route>
+				<Route path="planform" element={<PlanForm />}></Route>
+				<Route path="password" element={<Password />}></Route>
 			</Route>
 		</Route>,
 	),

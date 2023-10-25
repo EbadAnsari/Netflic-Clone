@@ -7,6 +7,44 @@
 	/* outline: none; */
 }
 
+:root {
+	--premium: linear-gradient(
+			318.25deg,
+			rgb(229, 9, 20) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+
+	--standard: linear-gradient(
+			318.25deg,
+			rgb(176, 56, 220) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+
+	--basic: linear-gradient(
+			318.25deg,
+			rgb(109, 59, 227) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+
+	--mobile: linear-gradient(
+			318.25deg,
+			rgb(33, 114, 227) 0%,
+			rgba(74, 42, 150, 0.5) 92.16%,
+			rgba(74, 42, 150, 0) 109.15%
+		),
+		rgb(29, 82, 157);
+}
+
+html {
+	scrollbar-gutter: stable;
+}
+
 body {
 	@apply text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100;
 }
@@ -18,6 +56,14 @@ body {
 select {
 	-webkit-appearance: none;
 	appearance: none;
+}
+
+.sun {
+	background-image: url("/public/icons/sun.svg");
+}
+
+.moon {
+	background-image: url("/public/icons/moonnew.svg");
 }
 
 .input-box {
@@ -68,52 +114,28 @@ select {
 }
 
 .type .premium {
-	background: linear-gradient(
-			318.25deg,
-			rgb(229, 9, 20) 0%,
-			rgba(74, 42, 150, 0.5) 92.16%,
-			rgba(74, 42, 150, 0) 109.15%
-		),
-		rgb(29, 82, 157);
+	background: var(--premium);
 }
 .type:has(.premium) li.marker::marker {
 	@apply text-netflix-red;
 }
 
 .type .standard {
-	background: linear-gradient(
-			318.25deg,
-			rgb(176, 56, 220) 0%,
-			rgba(74, 42, 150, 0.5) 92.16%,
-			rgba(74, 42, 150, 0) 109.15%
-		),
-		rgb(29, 82, 157);
+	background: var(--standard);
 }
 .type:has(.standard) li.marker::marker {
 	@apply text-[#b038dc];
 }
 
 .type .basic {
-	background: linear-gradient(
-			318.25deg,
-			rgb(109, 59, 227) 0%,
-			rgba(74, 42, 150, 0.5) 92.16%,
-			rgba(74, 42, 150, 0) 109.15%
-		),
-		rgb(29, 82, 157);
+	background: var(--basic);
 }
 .type:has(.basic) li.marker::marker {
 	@apply text-[#6d3be3];
 }
 
 .type .mobile {
-	background: linear-gradient(
-			318.25deg,
-			rgb(33, 114, 227) 0%,
-			rgba(74, 42, 150, 0.5) 92.16%,
-			rgba(74, 42, 150, 0) 109.15%
-		),
-		rgb(29, 82, 157);
+	background: var(--mobile);
 }
 .type:has(.mobile) li.marker::marker {
 	@apply text-[#2172e3];
@@ -127,14 +149,12 @@ select {
 @keyframes scale {
 	from {
 		@apply mr-0 w-0;
-		/* transform: scale(0); */
 	}
 	to {
 		@apply mr-2 w-5;
-		/* transform: scale(1); */
 	}
 }
 
-.hello {
-	translate: calc(0% - 1rem);
+.movie-info:hover :nth-last-child(1) {
+	@apply flex;
 }

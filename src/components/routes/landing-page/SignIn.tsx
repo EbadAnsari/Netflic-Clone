@@ -1,16 +1,10 @@
 import Alert from "@components/Alert";
 import InputBox from "@components/InputBox";
-import { login } from "@context/AuthContext";
+import { signIn, useAuth } from "@context/AuthContext";
 import { useCheckBox } from "@hooks/CheckBox";
 import { CredentialError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
-import { RememberMeValues, getRememberMe } from "@utils/RememberMe";
-import {
-	checkEmail,
-	checkPassword,
-	validEmail,
-	validPassword,
-} from "@utils/functions";
+import { checkEmail, validEmail, validPassword } from "@utils/functions";
 import { ChangeEvent, createRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -19,17 +13,14 @@ import {
 	Link,
 	redirect,
 	useActionData,
-	useNavigate,
 } from "react-router-dom";
 
 export default function SignIn() {
-	const [email, setEmail] = useState(
-		checkEmail(getRememberMe(RememberMeValues.email)),
-	);
+	const auth = useAuth();
 
-	const [password, setPassword] = useState(
-		checkPassword(getRememberMe(RememberMeValues.password)),
-	);
+	const [email, setEmail] = useState(checkEmail(auth?.user?.email));
+
+	const [password, setPassword] = useState("");
 
 	const passwordRef = createRef<HTMLInputElement>();
 
@@ -55,7 +46,10 @@ export default function SignIn() {
 
 			<div className="signin-body z-20 mx-auto flex w-full flex-col bg-black px-6 pt-24 md:my-20 md:mt-24 md:w-[450px] md:bg-opacity-75 md:px-16 md:py-10">
 				<h1 className="mb-7 text-3xl font-bold text-white">Sign In</h1>
-				<Form method="POST" action="/in/login">
+				<Form
+					method={auth ? "GET" : "POST"}
+					action={auth ? "/" : "/in/login"}
+				>
 					{action && (
 						<Alert
 							className="mb-4"
@@ -93,7 +87,7 @@ export default function SignIn() {
 						value={password}
 						className="mt-4 bg-[#333] [&>input]:border-0 [&>input]:bg-[#333] [&>input]:text-white [&>label]:text-[#b3b3b3]"
 						error={
-							validPassword(password) || password.length === 0
+							validPassword(password) || password?.length === 0
 								? { isError: false }
 								: {
 										isError: true,
@@ -137,18 +131,9 @@ export default function SignIn() {
 						type="submit"
 						onClick={(event) => {
 							if (
-								!validEmail(getRememberMe("email")) &&
-								validPassword(getRememberMe("password"))
+								!(validEmail(email) && validPassword(password))
 							) {
 								event.preventDefault();
-								// 	try {
-								// 		console.log(await login(email, password));
-								// 		navigate("/");
-								// 	} catch {
-								// 		navigate("/in/login");
-								// 	}
-								// } else {
-								// 	setError(true);
 							}
 						}}
 						className="mt-8 flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded bg-[#e50914] p-4 py-3 text-[16px] font-medium text-white transition-all"
@@ -207,10 +192,8 @@ export async function SignInAction({
 	const email = data.get("email") as string;
 	const password = data.get("password") as string;
 
-	console.log("asdfs");
-
 	try {
-		await login(email, password);
+		await signIn(email, password);
 		return redirect("/");
 	} catch {
 		return { invalidCredentials: true };

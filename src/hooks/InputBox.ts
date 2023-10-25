@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { ValidationResult } from "@interfaces/InputBoxInterace";
+import { useEffect, useRef, useState } from "react";
 
 /**
  *
@@ -7,34 +8,43 @@ import { useEffect, useRef } from "react";
  * @returns two functions `focus` and `leave`. `focus()` to set the focus to the input box and `leave()` to unset the focus of the input box.
  */
 export function useInputRef(focused: boolean = false) {
-	const inputBox = useRef<HTMLDivElement>(null);
+	const inputContainer = useRef<HTMLDivElement>(null);
+	const inputElement = useRef<HTMLInputElement>(null);
+	const labelElement = useRef<HTMLLabelElement>(null);
 
-	let inputElement: HTMLInputElement | null = null;
-	let labelElement = inputBox.current?.children[1];
+	const [inputBoxStatus, setInputBoxStatus] =
+		useState<ValidationResult>("neutral");
 
 	let isFocus = false;
 
 	const focus = useRef(() => {
-		if (!(inputElement && labelElement)) return;
+		if (!(inputElement.current && labelElement.current)) return;
 
 		isFocus = true;
-		inputElement.focus();
-		labelElement.classList.add("input-email-focus");
+		inputElement.current.focus();
+		labelElement.current.classList.add("input-email-focus");
 	});
+
 	const leave = useRef(() => {
-		if (inputElement?.value.length !== 0) return;
+		if (
+			(inputElement.current &&
+				inputElement?.current.value.length !== 0) ||
+			!labelElement.current
+		)
+			return;
 		isFocus = false;
-		labelElement?.classList.remove("input-email-focus");
+		labelElement.current.classList.remove("input-email-focus");
 	});
 
 	useEffect(() => {
-		focus.current = focus.current;
-		leave.current = leave.current;
-
-		if (!inputBox.current) return;
-
-		inputElement = inputBox.current.children[0] as HTMLInputElement;
-		labelElement = inputBox.current.children[1];
+		if (
+			!(
+				inputContainer.current &&
+				inputElement.current &&
+				labelElement.current
+			)
+		)
+			return;
 
 		if (!(inputElement && labelElement)) return;
 
@@ -43,7 +53,14 @@ export function useInputRef(focused: boolean = false) {
 		}
 
 		document.body.onclick = function (event: Event) {
-			if (!(inputBox.current && inputElement && labelElement)) return;
+			if (
+				!(
+					inputContainer.current &&
+					inputElement.current &&
+					labelElement.current
+				)
+			)
+				return;
 
 			if (isFocus) {
 				event.stopImmediatePropagation();
@@ -52,19 +69,27 @@ export function useInputRef(focused: boolean = false) {
 			}
 
 			if (
-				inputBox.current.contains(event.target as Node) ||
-				inputElement.value.length !== 0
+				inputContainer.current.contains(event.target as Node) ||
+				inputElement.current.value.length !== 0
 			) {
-				labelElement.classList.add("input-email-focus");
-			} else if (inputElement.value === "") {
-				labelElement.classList.remove("input-email-focus");
+				labelElement.current.classList.add("input-email-focus");
+			} else if (inputElement.current.value === "") {
+				labelElement.current.classList.remove("input-email-focus");
 			}
 		};
 
 		return () => {
 			document.body.onclick = null;
 		};
-	}, [inputBox]);
+	}, [inputContainer, inputElement, labelElement]);
 
-	return { focus, leave, inputBox };
+	return {
+		focus,
+		leave,
+		inputContainer,
+		setInputBoxStatus,
+		inputBoxStatus,
+		inputElement,
+		labelElement,
+	};
 }

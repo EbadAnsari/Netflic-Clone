@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
 	const theme = useTheme();
-	theme.setTheme("light");
+	theme.setTheme(theme.theme());
 
 	return (
 		<section className="flex h-full flex-col">
@@ -16,18 +16,26 @@ export default function SignUpLayout() {
 				>
 					<img
 						src="/public/icons/netflix-logo.svg"
-						alt=""
 						className="h-5 sm:h-11"
 					/>
 				</a>
 
-				<div
-					className="w-7 cursor-pointer rounded-full p-1 sm:w-10 sm:p-2 md:mx-3 md:text-lg lg:mx-5 xl:mx-8"
-					onClick={() => {
-						theme.toggleTheme();
-					}}
-				>
-					<ThemeButton />
+				<div className="cursor-pointer p-1 sm:p-2 md:mx-3 md:text-lg lg:mx-5 xl:mx-8">
+					<div className="flex gap-7">
+						<div
+							className="aspect-square w-7"
+							onClick={() => {
+								theme.toggleTheme();
+							}}
+						>
+							<ThemeButton />
+						</div>
+						<img
+							src="/public/icons/logout.svg"
+							alt=""
+							className="w-7 brightness-0 dark:brightness-100"
+						/>
+					</div>
 				</div>
 			</nav>
 

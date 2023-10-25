@@ -26,7 +26,6 @@ export default function QuestionAnswer({
 									selectedIndex === index && "rotate-45"
 								} mx-6 my-auto w-4 py-6 lg:w-9`}
 								onClick={() => {
-									console.log("clicked");
 									setSelectedIndex(null);
 								}}
 							>

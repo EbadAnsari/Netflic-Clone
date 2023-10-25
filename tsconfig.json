@@ -35,6 +35,6 @@
 			"@firebase-config": ["config/firebase-config.ts"]
 		}
 	},
-	"include": ["src"],
+	"include": ["src", "temp/Temp.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

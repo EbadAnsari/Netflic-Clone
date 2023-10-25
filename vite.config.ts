@@ -23,6 +23,6 @@ export default defineConfig({
 		},
 	},
 	server: {
-		open: "/",
+		open: "/signup/password",
 	},
 });

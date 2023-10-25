@@ -21,27 +21,10 @@ export interface SignUp {
 }
 export type SigningState = SignIn | SignUp;
 
-export interface TrailerModalState {
-	result: "play" | "add" | "close";
-}
-
-export interface AppState {
-	sign: SigningState;
-	modal: TrailerModalState;
-}
-
 export type CredentialError = {
 	invalidCredentials?: boolean;
 	errorFromServer?: boolean;
 };
-
-export interface ModalProps {
-	title: string;
-	duration: number;
-	genre: string;
-	videoSource: string;
-	description: string;
-}
 
 export interface Time {
 	second: number | undefined;
@@ -57,3 +40,35 @@ export interface UserInterface {
 	email: string;
 	password: string;
 }
+
+interface PremiumPlan {
+	planType: "premium";
+	resolution: "4K + HDR";
+}
+
+interface StandardPlan {
+	planType: "standard";
+	resolution: "1080p";
+}
+
+interface BasicPlan {
+	planType: "basic";
+	resolution: "720p";
+}
+
+interface MobilePlan {
+	planType: "mobile";
+	resolution: "480p";
+}
+
+export type PlanInterface = (
+	| PremiumPlan
+	| StandardPlan
+	| BasicPlan
+	| MobilePlan
+) & {
+	price: string;
+	currencyType: string;
+	duration: string;
+	description: string[];
+};

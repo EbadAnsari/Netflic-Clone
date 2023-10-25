@@ -1,22 +1,21 @@
+import InputBox from "@components/InputBox";
+import { useAuth } from "@context/AuthContext";
 import { useInputRef } from "@hooks/InputBox";
 import { signIn } from "@store/slice/SigningSlice";
-import {
-	RememberMeValues,
-	getRememberMe,
-	setRememberMe,
-} from "@utils/RememberMe";
-import { checkEmail, validEmail } from "@utils/functions";
+import { validEmail } from "@utils/functions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ActionFunctionArgs, Form, redirect } from "react-router-dom";
-import InputBox from "@components/InputBox";
+import { Navigate } from "react-router-dom";
 
 export default function SignUp() {
-	const [email, setEmail] = useState(getRememberMe(RememberMeValues.email));
+	const auth = useAuth();
 
-	const { focus } = useInputRef(email.length !== 0);
+	const emal = auth?.user?.email ?? "";
 
-	if (validEmail(email)) getRememberMe(RememberMeValues.email);
+	const [email, setEmail] = useState("");
+	// auth?.user && auth.user.email ? auth.user?.email : "",
+
+	const { focus } = useInputRef(email?.length !== 0);
 
 	const dispatch = useDispatch();
 
@@ -24,8 +23,17 @@ export default function SignUp() {
 		if (validEmail(email)) {
 			focus.current();
 		}
+
 		dispatch(signIn());
-	}, []);
+
+		if (auth?.user?.email) {
+			setEmail(auth.user.email);
+		}
+	}, [auth]);
+
+	if (auth?.userInfo?.isPaid) {
+		return <Navigate to={"/"} />;
+	}
 
 	return (
 		<section className="grid grid-cols-12">
@@ -51,56 +59,65 @@ export default function SignUp() {
 						Ready to watch? Enter your email to create or restart
 						your membership.
 					</p>
-					<Form
-						action="/in"
-						method="POST"
-						onSubmit={(event) => {
-							if (!validEmail(email)) {
-								event.preventDefault();
-							}
-						}}
+					<div
+						// action={auth?.user?.email ? "/signup/planform" : "/in"}
+						// method="POST"
+						// onSubmit={(event) => {
+						// 	if (!validEmail(email)) {
+						// 		event.preventDefault();
+						// 	}
+						// }}
 						className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch"
 					>
-						<InputBox
-							autoComplete="email"
-							type="email"
-							name="email"
-							required
-							value={email}
-							className="rounded-md [&+label]:text-[#8c8c8c] [&>*]:rounded-md [&>input]:bg-slate-950 [&>input]:bg-opacity-40 [&>input]:text-white [&>label]:font-semibold [&>label]:text-[#b3b3b3]"
-							label="Email address"
-							sucess={{ isSucess: validEmail(email) }}
-							onChange={({
-								target: { value },
-							}: ChangeEvent<HTMLInputElement>) => {
-								setEmail(value);
-							}}
-							error={
-								validEmail(email) || email.length === 0
-									? { isError: false }
-									: {
-											isError: true,
-											message:
-												"Please enter a valid email address.",
-									  }
+						{!auth?.user?.email && (
+							<InputBox
+								autoComplete="email"
+								type="email"
+								name="email"
+								required
+								value={email}
+								className="rounded-md [&+label]:text-[#8c8c8c] [&>*]:rounded-md [&>input]:bg-slate-950 [&>input]:bg-opacity-40 [&>input]:text-white [&>label]:font-semibold [&>label]:text-[#b3b3b3]"
+								label="Email address"
+								sucess={{ isSucess: validEmail(email) }}
+								onChange={({
+									target: { value },
+								}: ChangeEvent<HTMLInputElement>) => {
+									setEmail(value);
+								}}
+								error={
+									validEmail(email) || email.length === 0
+										? { isError: false }
+										: {
+												isError: true,
+												message:
+													"Please enter a valid email address.",
+										  }
+								}
+							/>
+						)}
+						<a
+							href={
+								auth?.user
+									? "/signup/planform"
+									: "/signup/password"
 							}
-						/>
-						<button className="h-fit cursor-pointer whitespace-nowrap rounded-[4px] bg-[#e50914] px-5 py-3 text-lg font-semibold text-white sm:px-7 sm:text-2xl">
-							Get Started &gt;
-						</button>
-					</Form>
+							className={`h-fit cursor-pointer whitespace-nowrap rounded-[4px] bg-[#e50914] px-5 py-3 text-lg font-semibold text-white sm:px-7 sm:text-2xl ${
+								auth?.user?.email && "mx-auto text-center"
+							}`}
+							onClick={(event) => {
+								if (!validEmail(email)) event.preventDefault();
+
+								localStorage.setItem("email", email);
+							}}
+						>
+							{auth?.user?.email
+								? "Finish Signup >"
+								: "Get Started >"}
+							{/* Get Stated &gt; */}
+						</a>
+					</div>
 				</div>
 			</div>
 		</section>
 	);
-}
-
-export async function SignUpAction({ request }: ActionFunctionArgs) {
-	const data = await request.formData();
-
-	const email = data.get("email") as string;
-
-	setRememberMe(RememberMeValues.email, email);
-
-	if (checkEmail(email)) return redirect("/signup/password");
 }

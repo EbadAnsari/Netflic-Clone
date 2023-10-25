@@ -1,4 +1,5 @@
-import { auth } from "@utils/firebase-config";
+import { TMDBResult } from "@interfaces/TheMovieDBInterface";
+import { auth, firestore } from "@utils/firebase-config";
 import {
 	User,
 	createUserWithEmailAndPassword,
@@ -6,6 +7,7 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 } from "firebase/auth";
+import { collection, getDocs, query, setDoc, where } from "firebase/firestore";
 import {
 	PropsWithChildren,
 	createContext,
@@ -24,23 +26,61 @@ export function logout() {
 	return signOut(auth);
 }
 
-const AuthenticationContext = createContext<User | boolean | null>(true);
+export async function setFavouriteMovie(
+	oldFavouriteMoviesId: TMDBResult["id"],
+	newFavouriteMoviesId: TMDBResult["id"],
+) {
+	// setDoc
+}
+
+export async function setPayment() {
+	// setDoc
+}
+
+interface UserInterface {
+	user: User | null;
+	userInfo: {
+		email: string;
+		isPaid?: boolean;
+		favouriteMovies?: number[];
+	} | null;
+}
+
+const AuthenticationContext = createContext<UserInterface | null>(null);
 
 export function useAuth() {
 	return useContext(AuthenticationContext);
 }
 
 export default function Authentication({ children }: PropsWithChildren) {
-	const [currentUser, setCurrentUser] = useState<User | boolean | null>(true);
+	const [currentUserDetails, setCurrentUserDetails] =
+		useState<UserInterface | null>(null);
 
-	// useEffect(() => {
-	// 	onAuthStateChanged(auth, (user) => {
-	// 		setCurrentUser(user);
-	// 	});
-	// }, []);
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user)
+				getDocs(
+					query(
+						collection(firestore, "user-info"),
+						where("email", "==", user.email),
+					),
+				).then((data) => {
+					data.forEach((e) => {
+						setCurrentUserDetails({
+							user,
+							userInfo: e.data() as UserInterface["userInfo"],
+						});
+					});
+				});
+			setCurrentUserDetails({
+				user,
+				userInfo: null,
+			});
+		});
+	}, []);
 
 	return (
-		<AuthenticationContext.Provider value={currentUser}>
+		<AuthenticationContext.Provider value={currentUserDetails}>
 			{children}
 		</AuthenticationContext.Provider>
 	);

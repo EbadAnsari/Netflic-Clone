@@ -1,23 +1,30 @@
-import { TrailerModalState } from "@interfaces/interface";
-import { createSlice } from "@reduxjs/toolkit";
+import {
+	TrailerModalInputs,
+	TrailerModalSliceType,
+} from "@interfaces/ModalInterface";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-const initialState: TrailerModalState = { result: "close" };
+const initialState: TrailerModalSliceType = {
+	modalState: "close",
+};
 
-const trailerModalSlice = createSlice({
+const modalSlice = createSlice({
 	initialState,
 	name: "modalResult",
 	reducers: {
-		add(state: TrailerModalState) {
-			state.result = "add";
+		openModal(
+			state: TrailerModalSliceType,
+			actions: PayloadAction<TrailerModalInputs>,
+		) {
+			state.modalState = "open";
+			state.modalValue = actions.payload;
 		},
-		close(state: TrailerModalState) {
-			state.result = "close";
-		},
-		play(state: TrailerModalState) {
-			state.result = "play";
+		closeModal(state: TrailerModalSliceType) {
+			state.modalState = "close";
+			state.modalValue = undefined;
 		},
 	},
 });
 
-export const { add, close, play } = trailerModalSlice.actions;
-export default trailerModalSlice.reducer;
+export const { openModal, closeModal } = modalSlice.actions;
+export default modalSlice.reducer;

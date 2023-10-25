@@ -1,15 +1,13 @@
-FAQ
-Help Centre
-Account
-Media Centre
-Investor Relations
-Jobs
-Ways to Watch
-Terms of Use
-Privacy
-Cookie Preferences
-Corporate Information
-Contact Us
-Speed Test
-Legal Notices
-Only on Netflix
+|  poster  | backdrop |  still   | profile  |   logo   |
+| :------: | :------: | :------: | :------: | :------: |
+|   ----   |   ----   |   ----   |   w45    |   w45    |
+|   w92    |   ----   |   w92    |   ----   |   w92    |
+|   w154   |   ----   |   ----   |   ----   |   w154   |
+|   w185   |   ----   |   w185   |   w185   |   w185   |
+|   ----   |   w300   |   w300   |   ----   |   w300   |
+|   w342   |   ----   |   ----   |   ----   |   ----   |
+|   w500   |   ----   |   ----   |   ----   |   w500   |
+|   ----   |   ----   |   ----   |   h632   |   ----   |
+|   w780   |   w780   |   ----   |   ----   |   ----   |
+|   ----   |  w1280   |   ----   |   ----   |   ----   |
+| original | original | original | original | original |

@@ -17,7 +17,6 @@ export function useCheckBox(checkBoxState: boolean = false) {
 	useEffect(() => {
 		if (checkBox.current === null) return;
 
-		console.log(checkBox);
 		handleClick();
 		removeChild(checkBox.current);
 		checkBox.current.appendChild(document.createTextNode("Remember Me"));

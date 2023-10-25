@@ -1,9 +1,13 @@
-import { ReactNode, useRef } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 interface ScrollerProps {
-	children: ReactNode[];
+	children: ReactNode;
 	className?: string;
 	title?: string;
+}
+
+export function Option({ children }: PropsWithChildren) {
+	return children;
 }
 
 export default function Scroller({
@@ -12,50 +16,69 @@ export default function Scroller({
 	className,
 }: ScrollerProps) {
 	const scroller = useRef<HTMLDivElement>(null);
+
+	const scrollBarButtonRef = {
+		left: useRef<HTMLButtonElement>(null),
+		right: useRef<HTMLButtonElement>(null),
+	};
+
+	useEffect(() => {
+		if (
+			scroller.current &&
+			scroller.current.scrollWidth <= scroller.current.clientWidth &&
+			scrollBarButtonRef.left.current &&
+			scrollBarButtonRef.right.current
+		) {
+			scrollBarButtonRef.left.current.style.display = "none";
+			scrollBarButtonRef.right.current.style.display = "none";
+		}
+	}, []);
+
+	if (!(children instanceof Array) || !children?.[0]?.$$typeof) return "";
+	const options = Array.from(children);
+
 	return (
-		<div className={`relative ${className}`}>
+		<div className={`relative ${className ?? ""}`}>
 			{title && (
-				<p className="text-sm sm:text-base md:text-lg">{title}</p>
+				<p className="pb-0.5 text-base font-semibold sm:text-base md:pb-2 md:text-xl">
+					{title}
+				</p>
 			)}
-			<div className="relative [&_div.scroller-button]:hover:bg-white [&_div.scroller-button]:hover:bg-opacity-10 [&_div.scroller-button]:hover:backdrop-blur-sm">
-				<div
-					className="scroller-button absolute left-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2"
+			<div className="relative [&_button.scroller-button]:hover:bg-white [&_button.scroller-button]:hover:bg-opacity-10 [&_button.scroller-button]:hover:backdrop-blur-sm">
+				<button
+					className={`scroller-button absolute left-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center rounded-l-sm px-1 sm:px-2`}
 					onClick={() => {
 						if (scroller.current)
 							scroller.current.scrollLeft -= 300;
 					}}
+					ref={scrollBarButtonRef.left}
 				>
 					<img
 						src="/public/icons/drop-down-icon.svg"
 						className="rotate-90"
-						alt=""
 					/>
-				</div>
+				</button>
 				<div
 					ref={scroller}
 					className="scrollbar-none flex w-full gap-2 overflow-x-scroll scroll-smooth sm:gap-3 md:gap-4"
 				>
-					{children.map((node, index) => {
-						return (
-							<div key={index} className="transition-all">
-								{node}
-							</div>
-						);
+					{options.map((node, index) => {
+						return <div key={index}>{node}</div>;
 					})}
 				</div>
-				<div
-					className="scroller-button absolute right-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center px-2"
+				<button
+					className="scroller-button absolute right-0 top-0 z-10 flex h-full cursor-pointer select-none place-items-center rounded-r-sm px-1 sm:px-2"
 					onClick={() => {
 						if (scroller.current)
 							scroller.current.scrollLeft += 300;
 					}}
+					ref={scrollBarButtonRef.right}
 				>
 					<img
 						src="/public/icons/drop-down-icon.svg"
 						className="-rotate-90"
-						alt=""
 					/>
-				</div>
+				</button>
 			</div>
 		</div>
 	);

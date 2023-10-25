@@ -40,22 +40,22 @@ export default function Navbar() {
 				</a>
 				<div className="nav-links text-white">
 					<DropDown title="Browse">
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							Home
 						</a>
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							Series
 						</a>
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							Films
 						</a>
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							New & Popular
 						</a>
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							My List
 						</a>
-						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3">
+						<a className="w-full whitespace-nowrap py-2 text-center lg:px-3 lg:text-lg">
 							Browse by Languages
 						</a>
 					</DropDown>
@@ -77,26 +77,25 @@ export default function Navbar() {
 					<img
 						src="/public/icons/drop-down-icon.svg"
 						className={`${logOutStatus && "rotate-180"} w-5`}
-						alt=""
 					/>
 					<Form
 						method="GET"
-						action="/sign/up"
+						action="/in"
 						onSubmit={logout}
 						className={`${
-							logOutStatus ? "block" : "hidden"
-						} absolute right-6 top-full translate-y-3 rounded-md bg-white bg-opacity-40 py-5 text-white backdrop-blur-lg md:rounded-lg`}
+							logOutStatus ? "scale-100" : "scale-0"
+						} absolute right-0 top-full flex w-40 origin-top-right translate-y-3 flex-col items-center rounded-md bg-white bg-opacity-20 px-3 py-5 text-xs text-white backdrop-blur-3xl transition-transform sm:w-52 sm:text-sm md:rounded-lg md:text-base`}
 					>
-						<div className="px-3">
+						<div className="w-full">
 							<img
 								src="/public/icons/profile-photo.png"
-								className="w-8 rounded-md"
+								className="w-6 rounded-md sm:w-8"
 							/>
 						</div>
-						<hr className="mx-3 my-4 rounded-full border border-white border-opacity-10" />
+						<hr className="mx-4 my-4 w-full rounded-full border border-white border-opacity-10" />
 						<button
 							type="submit"
-							className="mx-10 block w-max cursor-pointer px-3 text-sm hover:underline"
+							className="block w-max cursor-pointer px-3 text-center hover:underline"
 						>
 							Sign out of Netflix
 						</button>

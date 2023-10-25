@@ -12,7 +12,6 @@ export default function SignUpHome() {
 				<img
 					src="/public/icons/checkbox-tick.svg"
 					className="w-6 select-none"
-					alt=""
 				/>
 			</div>
 			<p className="mt-5 text-xs uppercase">
@@ -27,7 +26,6 @@ export default function SignUpHome() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					No commitments, cancel anytime.
 				</div>
@@ -35,7 +33,6 @@ export default function SignUpHome() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					Everything on Netflix for one low price.
 				</div>
@@ -43,7 +40,6 @@ export default function SignUpHome() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					No ads and no extra fees. Ever.
 				</div>

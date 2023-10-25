@@ -16,6 +16,13 @@ export default {
 				modal: "60",
 				"video-watch": "70",
 			},
+			backgroundImage: {
+				sun: "url('public/icons/sun.svg')",
+				moon: "url('public/icons/moon.svg')",
+			},
+			screens: {
+				xs: "520px",
+			},
 		},
 	},
 	plugins: [],

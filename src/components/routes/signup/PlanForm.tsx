@@ -1,67 +1,61 @@
 import { slideInOut } from "@animation/animate";
-import { login } from "@context/AuthContext";
-import { CredentialError } from "@interfaces/interface";
-import { getRememberMe } from "@utils/RememberMe";
-import { validEmail, validPassword } from "@utils/functions";
+import { PlanInterface } from "@interfaces/interface";
 import { motion as m } from "framer-motion";
 import { useState } from "react";
-import {
-	ActionFunctionArgs,
-	Form,
-	redirect,
-	useNavigate,
-} from "react-router-dom";
 
-const plans = [
+const plans: PlanInterface[] = [
 	{
-		type: "premium",
+		planType: "premium",
 		price: "646",
-		curr: "₹",
+		currencyType: "₹",
 		duration: "mo.",
 		description: [
 			"Our best video quality in 4K and HDR",
 			"Watch on your TV, computer, mobile phone and tablet",
 			"Downloads available",
 		],
+		resolution: "4K + HDR",
 	},
 	{
-		type: "standard",
+		planType: "standard",
 		price: "499",
-		curr: "₹",
+		currencyType: "₹",
 		duration: "mo.",
 		description: [
 			"Great video quality in 1080p",
 			"Watch on your TV, computer, mobile phone and tablet",
 			"Downloads available",
 		],
+		resolution: "1080p",
 	},
 	{
-		type: "basic",
+		planType: "basic",
 		price: "199",
-		curr: "₹",
+		currencyType: "₹",
 		duration: "mo.",
 		description: [
 			"Great video quality in 720p",
 			"Watch on your TV, computer, mobile phone and tablet",
 			"Downloads available",
 		],
+		resolution: "720p",
 	},
 	{
-		type: "mobile",
+		planType: "mobile",
 		price: "149",
-		curr: "₹",
+		currencyType: "₹",
 		duration: "mo.",
 		description: [
 			"Great video quality in 480p",
 			"Watch on your TV, computer, mobile phone and tablet",
 			"Downloads available",
 		],
+		resolution: "480p",
 	},
 ];
 
 export default function PlanForm() {
 	const [selectedPlan, setPlan] = useState(0);
-	const navigate = useNavigate();
 
 	return (
 		<m.div
@@ -83,7 +77,6 @@ export default function PlanForm() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					Watch all you want. Ad-free.
 				</div>
@@ -91,7 +84,6 @@ export default function PlanForm() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					Recommendations just for you.
 				</div>
@@ -99,16 +91,21 @@ export default function PlanForm() {
 					<img
 						src="/public/icons/checkbox-tick.svg"
 						className="w-7 rotate-12 select-none p-1"
-						alt=""
 					/>
 					Change or cancel your plan anytime.
 				</div>
 			</div>
-			<Form action="/signup/planform" method="POST">
-				<div className="plan-container my-6 flex grid-cols-4 flex-col gap-3 lg:grid">
+			<div>
+				<div className="plan-container mx-auto my-6 flex w-80 grid-cols-4 flex-col gap-3 sm:w-[35rem] lg:grid lg:w-[58rem] xl:w-[65rem]">
 					{plans.map(
 						(
-							{ curr, description, duration, price, type },
+							{
+								currencyType,
+								description,
+								duration,
+								price,
+								planType,
+							},
 							index,
 						) => {
 							return (
@@ -116,7 +113,7 @@ export default function PlanForm() {
 									onClick={() => {
 										setPlan(index);
 									}}
-									key={type + price}
+									key={planType + price}
 									className={`cursor-pointer overflow-hidden rounded-xl border border-[rgba(128,128,128,0.4)] ${
 										selectedPlan === index &&
 										"type shadow-[rgba(0,0,0,0.1)_0px_0px_2px,rgba(0,0,0,0.1)_0px_4px_8px]"
@@ -132,7 +129,9 @@ export default function PlanForm() {
 									)}
 									<div
 										className={`flex items-center justify-between px-4 py-3 text-lg font-semibold lg:justify-normal ${
-											selectedPlan === index ? type : ""
+											selectedPlan === index
+												? planType
+												: ""
 										}`}
 									>
 										<div className="flex">
@@ -143,15 +142,15 @@ export default function PlanForm() {
 												/>
 											) : null}
 											<p className="font-semibold capitalize lg:hidden">
-												{type}
+												{planType}
 											</p>
 										</div>
 										<div className="">
 											<p className="hidden font-semibold capitalize lg:block">
-												{type}
+												{planType}
 											</p>
 											<p className="text-base font-medium">
-												{curr}
+												{currencyType}
 												{price}/{duration}
 											</p>
 										</div>
@@ -192,38 +191,15 @@ export default function PlanForm() {
 					</p>
 				</div>
 
-				<button
+				<a
+					href="/"
 					type="submit"
-					className="mx-auto mt-5 block w-[min(28rem,100%)] rounded bg-netflix-red py-5 text-2xl font-semibold text-white hover:bg-netflix-red-hover"
+					className="mx-auto mt-5 block w-[min(28rem,100%)] rounded bg-netflix-red py-5 text-center text-2xl font-semibold text-white hover:bg-netflix-red-hover"
+					onClick={() => {}}
 				>
 					Next
-				</button>
-			</Form>
+				</a>
+			</div>
 		</m.div>
 	);
-}
-
-export async function PlanFormAction({
-	request,
-}: ActionFunctionArgs): Promise<CredentialError | Response> {
-	const data = await request.formData();
-
-	const email = getRememberMe("email");
-	const password = getRememberMe("password");
-
-	const planform = data.get("planform") as string;
-
-	console.log({ email, password, planform });
-
-	if (!(validEmail(email) && validPassword(password))) {
-		return { invalidCredentials: true };
-	}
-
-	try {
-		// await login(email, password);
-		return redirect("/");
-	} catch {
-		redirect("/signup/password");
-		return { errorFromServer: true };
-	}
 }

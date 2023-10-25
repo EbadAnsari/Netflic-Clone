@@ -1,37 +1,46 @@
-import { useRef, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef } from "react";
 
-const outSideClickEvent: ((event: MouseEvent) => void)[] = [];
+export interface BodyClickEvent<T> extends MouseEvent {
+	element: RefObject<T>;
+	clickedInside: boolean;
+}
 
-export function useOnBodyClick<T>(outSide: boolean) {
-	const [isOutSide, setIsOutSide] = useState<boolean>(outSide);
-	const currentEventIndex = outSideClickEvent.length;
+const outSideClickEvent: {
+	callback: (event: BodyClickEvent<any>) => void;
+	element: RefObject<any>;
+}[] = [];
+
+export function useOnBodyClick<T>(
+	bodyClickCallback: (event: BodyClickEvent<T>) => void,
+) {
 	const element = useRef<T>(null);
 
-	outSideClickEvent.push(function (event: MouseEvent) {
-		setIsOutSide(
-			element.current !== null &&
-				(element.current as HTMLElement).contains(event.target as Node),
-		);
-	});
-
-	function createCurrentHandler() {
-		document.body.onclick = function (event: MouseEvent) {
-			outSideClickEvent.forEach((handleFunction) => {
-				handleFunction(event);
-			});
-		};
-	}
-	function destroyCurrentHandler() {
-		outSideClickEvent.splice(currentEventIndex, 1);
-	}
+	const currentEventFunctionIndex = outSideClickEvent.length;
 
 	useEffect(() => {
-		destroyCurrentHandler();
-		createCurrentHandler();
+		outSideClickEvent.push({ callback: bodyClickCallback, element });
+
+		document.body.onclick = function (event: MouseEvent) {
+			event.stopImmediatePropagation();
+
+			outSideClickEvent.forEach((functionCallback) => {
+				const element = functionCallback.element;
+				functionCallback.callback({
+					...event,
+					element,
+					clickedInside: (element.current as HTMLElement).contains(
+						event.target as Node,
+					),
+				});
+			});
+		};
+
+		return () => {
+			outSideClickEvent.splice(currentEventFunctionIndex, 1);
+		};
 	}, [element]);
 
 	return {
-		isOutSide,
 		element,
 	};
 }

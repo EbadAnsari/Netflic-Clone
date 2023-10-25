@@ -3,15 +3,13 @@ import QuestionAnswer from "@components/QuestionAnswer";
 import SelectLanguage from "@components/SelectLanguage";
 import { SigningState } from "@interfaces/interface";
 import { useTheme } from "@utils/functions";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, Outlet } from "react-router-dom";
 
 export default function LandingPage() {
 	const variant: SigningState = useSelector(
 		(state: any) => state.SigningReducer,
 	);
-	const location = useLocation();
-	const dispatch = useDispatch();
 
 	const theme = useTheme();
 	theme.setTheme("dark");

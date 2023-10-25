@@ -1,7 +1,9 @@
-import { useLocalStorage } from "@hooks/Storage";
 import { ThemeType, Time } from "@interfaces/interface";
+import { MouseEvent } from "react";
 
-export function validEmail(email: string | undefined | null) {
+type ValidationInputString = string | undefined | null;
+
+export function validEmail(email: ValidationInputString) {
 	return (
 		typeof email === "string" &&
 		!!email.length &&
@@ -9,7 +11,7 @@ export function validEmail(email: string | undefined | null) {
 	);
 }
 
-export function validPassword(password: string | undefined | null) {
+export function validPassword(password: ValidationInputString) {
 	return (
 		typeof password === "string" &&
 		6 <= password.length &&
@@ -17,13 +19,13 @@ export function validPassword(password: string | undefined | null) {
 	);
 }
 
-export function checkEmail(email: string | undefined | null) {
+export function checkEmail(email: ValidationInputString) {
 	return typeof email === "string" && email.length && validEmail(email)
 		? email
 		: "";
 }
 
-export function checkPassword(password: string | undefined | null) {
+export function checkPassword(password: ValidationInputString) {
 	return typeof password === "string" && validPassword(password)
 		? password
 		: "";
@@ -80,4 +82,35 @@ export function isMobileDevice() {
 
 export function titlCase(text: string) {
 	return text.at(0)?.toUpperCase() + text.substring(1);
+}
+
+export function generateRamdomNumber(start: number, end?: number) {
+	return Math.floor(
+		end && start < end
+			? Math.random() * (end - start + 1) - start
+			: Math.random() * start + 1,
+	);
+}
+
+type LineClamps = 1 | 2 | 3 | 4 | 5 | 6;
+
+export function toggleLineClamp(
+	lineClamps: {
+		[key: string]: LineClamps | undefined;
+		xs?: LineClamps;
+		sm?: LineClamps;
+		md?: LineClamps;
+		lg?: LineClamps;
+		xl?: LineClamps;
+		"2xl"?: LineClamps;
+	},
+	event: MouseEvent,
+) {
+	for (const lineClamp in lineClamps) {
+		(event.target as HTMLElement).classList.toggle(
+			`${lineClamp === "xs" ? "" : lineClamp + ":"}line-clamp-${
+				lineClamps[lineClamp]
+			}`,
+		);
+	}
 }
