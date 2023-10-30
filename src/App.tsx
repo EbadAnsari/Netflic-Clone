@@ -3,7 +3,7 @@ import MediaQuery from "./MediaQuery";
 import Test from "@components/Test";
 import Spinner from "@components/Spinner";
 import LoadingSpinner from "@components/icons/LoadingSpinner";
-import FixedList from "@components/FixedList";
+import FixedList from "@components/InfiniteScroller";
 
 export default function App() {
 	return (
