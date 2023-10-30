@@ -10,6 +10,34 @@ import {
 
 export type InputBoxRef = ReturnType<typeof useInputRef>;
 
+export function PasswordShowHide({
+	passwordElement,
+}: {
+	passwordElement?: HTMLInputElement | null;
+}) {
+	return (
+		<span
+			className="absolute right-0 top-0 inline-flex h-full cursor-pointer select-none items-center rounded bg-transparent p-3 text-center uppercase text-[#737373]"
+			onClick={(event) => {
+				if (!passwordElement) return;
+
+				const target = event.target as HTMLSpanElement;
+
+				if (passwordElement.type === "password") {
+					passwordElement.type = "text";
+					target.innerText = "hide";
+				} else {
+					passwordElement.type = "password";
+					target.innerText = "show";
+				}
+				passwordElement.focus();
+			}}
+		>
+			show
+		</span>
+	);
+}
+
 function InputBox(
 	InputProps: InputBoxInterface,
 	ref?: ForwardedRef<InputBoxRef>,
@@ -35,12 +63,8 @@ function InputBox(
 	}));
 
 	useEffect(() => {
-		if (
-			inputBoxStatus === "error" ||
-			inputBoxStatus === "sucess" ||
-			inputBoxStatus === "neutral"
-		) {
-			// focus.current();
+		if (InputProps["data-focused"]) {
+			focus.current();
 		}
 	}, []);
 
@@ -49,7 +73,7 @@ function InputBox(
 			<div
 				ref={inputContainer}
 				className={`${InputProps.className} ${
-					inputBoxStatus === "error" && "sign-in-error-input"
+					inputBoxStatus === "error" && "[&+span.error]:block"
 				} relative rounded`}
 			>
 				<input
@@ -73,13 +97,13 @@ function InputBox(
 							);
 					}}
 					required
-					className={`w-full rounded border-[1px] border-solid border-zinc-600 px-4 pb-2 pt-6 [&_+_span]:bg-red-500 ${(() => {
+					className={`w-full rounded border border-solid border-zinc-600 px-4 pb-2 pt-6 [&_+_span]:bg-[#e87c03] ${(() => {
 						if (inputBoxStatus === "neutral")
-							return "border-b border-b-[#52525b]";
+							return "border-b border-b-zinc-600";
 						else if (inputBoxStatus === "error")
-							return "border-b-2 border-b-red-500";
+							return "!border-b-2 !border-b-[#e87c03]";
 						else if (inputBoxStatus === "sucess")
-							return "border-b-2 border-b-[#4bb543]";
+							return "!border-b-2 !border-b-[#4bb543]";
 					})()}`}
 				/>
 				<label
@@ -91,7 +115,7 @@ function InputBox(
 				</label>
 				{InputProps.component}
 			</div>
-			<span className="error hidden">
+			<span className="error hidden w-full p-[2px] text-xs text-[#e87c03]">
 				{inputBoxStatus === "error" && InputProps["data-errormessage"]}
 			</span>
 		</div>

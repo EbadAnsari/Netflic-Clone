@@ -14,6 +14,7 @@ export interface InputBoxProps {
 		| undefined;
 	"data-errormessage": string;
 	"data-sucessmessage"?: string;
+	"data-focused"?: boolean;
 }
 
 export type ValidationResult = "error" | "neutral" | "sucess";

@@ -32,13 +32,22 @@ export default function Scroller({
 			scrollBarButtonRef.left.current.style.display = "none";
 			scrollBarButtonRef.right.current.style.display = "none";
 		}
+
+		if (!scroller.current) return;
+
+		const observer = new IntersectionObserver((enrty) => {
+			console.log(enrty);
+		});
+		Array.from(scroller.current.children).forEach((node) => {
+			observer.observe(node);
+		});
 	}, []);
 
 	if (!(children instanceof Array) || !children?.[0]?.$$typeof) return "";
 	const options = Array.from(children);
 
 	return (
-		<div className={`relative ${className ?? ""}`}>
+		<div className={`relative text-white ${className ?? ""}`}>
 			{title && (
 				<p className="pb-0.5 text-base font-semibold sm:text-base md:pb-2 md:text-xl">
 					{title}

@@ -1,11 +1,11 @@
 import Alert from "@components/Alert";
-import InputBox from "@components/InputBox";
+import InputBox, { InputBoxRef, PasswordShowHide } from "@components/InputBox";
 import { signIn, useAuth } from "@context/AuthContext";
 import { useCheckBox } from "@hooks/CheckBox";
 import { CredentialError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
 import { checkEmail, validEmail, validPassword } from "@utils/functions";
-import { ChangeEvent, createRef, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
 	ActionFunctionArgs,
@@ -19,16 +19,16 @@ export default function SignIn() {
 	const auth = useAuth();
 
 	const [email, setEmail] = useState(checkEmail(auth?.user?.email));
-
 	const [password, setPassword] = useState("");
 
-	const passwordRef = createRef<HTMLInputElement>();
+	const emailRef = useRef<InputBoxRef>(null);
+	const passwordRef = useRef<InputBoxRef>(null);
 
 	const { checkBox, checked } = useCheckBox(true);
 
 	const dispatch = useDispatch();
 
-	const action = useActionData() as CredentialError;
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		dispatch(signUp());
@@ -46,33 +46,32 @@ export default function SignIn() {
 
 			<div className="signin-body z-20 mx-auto flex w-full flex-col bg-black px-6 pt-24 md:my-20 md:mt-24 md:w-[450px] md:bg-opacity-75 md:px-16 md:py-10">
 				<h1 className="mb-7 text-3xl font-bold text-white">Sign In</h1>
-				<Form
-					method={auth ? "GET" : "POST"}
-					action={auth ? "/" : "/in/login"}
+				<div
+				// method={auth ? "GET" : "POST"}
+				// action={auth ? "/" : "/in/login"}
 				>
-					{action && (
+					{/* {action && (
 						<Alert
 							className="mb-4"
 							text="Invalid Credential."
 							type="error"
 						/>
-					)}
+					)} */}
 					<InputBox
 						label="Email"
 						type="email"
 						name="email"
 						value={email}
+						ref={emailRef}
 						className="bg-[#333] [&>input]:border-0 [&>input]:bg-[#333] [&>input]:text-white [&>label]:text-[#b3b3b3]"
-						error={
-							validEmail(email) || email.length === 0
-								? { isError: false }
-								: {
-										isError: true,
-										message:
-											"Please enter a valid email address.",
-								  }
-						}
-						sucess={{ isSucess: validEmail(email) }}
+						data-errormessage="Please enter a valid email address."
+						data-validation={(event) => {
+							if (event.target.value.length === 0)
+								return "neutral";
+							else if (validEmail(event.target.value))
+								return "sucess";
+							else return "error";
+						}}
 						onChange={({
 							target: { value },
 						}: ChangeEvent<HTMLInputElement>) => {
@@ -86,58 +85,57 @@ export default function SignIn() {
 						ref={passwordRef}
 						value={password}
 						className="mt-4 bg-[#333] [&>input]:border-0 [&>input]:bg-[#333] [&>input]:text-white [&>label]:text-[#b3b3b3]"
-						error={
-							validPassword(password) || password?.length === 0
-								? { isError: false }
-								: {
-										isError: true,
-										message:
-											"Your password must contain between 6 and 16 characters.",
-								  }
-						}
-						sucess={{ isSucess: validPassword(password) }}
+						data-errormessage="Your password must contain between 6 and 16 characters."
+						data-validation={(event) => {
+							if (event.target.value.length === 0)
+								return "neutral";
+							else if (validPassword(event.target.value))
+								return "sucess";
+							else return "error";
+						}}
 						onChange={({
 							target: { value },
 						}: ChangeEvent<HTMLInputElement>) => {
 							setPassword(value);
 						}}
 						component={
-							<span
-								className="absolute right-0 top-0 inline-flex h-full cursor-pointer select-none items-center rounded bg-transparent p-3 text-center uppercase text-[#737373]"
-								onClick={(event) => {
-									if (passwordRef.current === null) return;
-
-									const target =
-										event.target as HTMLSpanElement;
-
-									if (
-										passwordRef.current.type === "password"
-									) {
-										passwordRef.current.type = "text";
-										target.innerText = "hide";
-									} else {
-										passwordRef.current.type = "password";
-										target.innerText = "show";
-									}
-								}}
-							>
-								show
-							</span>
+							<PasswordShowHide
+								passwordElement={
+									passwordRef.current?.inputElement.current
+								}
+							/>
 						}
 					/>
 
-					<input
-						value="Sign In"
+					<Link
+						to="/"
 						type="submit"
-						onClick={(event) => {
+						onClick={async (event) => {
 							if (
 								!(validEmail(email) && validPassword(password))
 							) {
 								event.preventDefault();
+								// return;
 							}
+							setLoading(true);
+
+							setTimeout(() => {
+								setLoading(false);
+							}, 2000);
+
+							// await
 						}}
-						className="mt-8 flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded bg-[#e50914] p-4 py-3 text-[16px] font-medium text-white transition-all"
-					/>
+						className={`mt-8 flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded bg-[#e50914] p-4 py-3 font-medium text-white transition-all ${
+							loading && "pointer-events-none"
+						}`}
+					>
+						{loading && (
+							<div className="h-max">
+								<div className="aspect-square h-full w-6 animate-spin rounded-full border-[3px] border-[#ffffff44] border-l-white"></div>
+							</div>
+						)}
+						{loading || <p>Sign In</p>}
+					</Link>
 					<div className="mt-4 flex justify-between">
 						<label
 							ref={checkBox}
@@ -150,16 +148,11 @@ export default function SignIn() {
 						>
 							Remember Me
 						</label>
-						<input
-							type="text"
-							className="hidden"
-							name="set-session"
-						/>
 						<label className="cursor-pointer text-xs text-[#b3b3b3]">
 							Need Help?
 						</label>
 					</div>
-				</Form>
+				</div>
 				<div className="my-10">
 					<p>
 						<label className="text-[#737373]">

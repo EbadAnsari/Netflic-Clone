@@ -1,19 +1,18 @@
-import InputBox from "@components/InputBox";
+import InputBox, { InputBoxRef } from "@components/InputBox";
 import { useAuth } from "@context/AuthContext";
 import { useInputRef } from "@hooks/InputBox";
 import { signIn } from "@store/slice/SigningSlice";
 import { validEmail } from "@utils/functions";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export default function SignUp() {
 	const auth = useAuth();
 
-	const emal = auth?.user?.email ?? "";
-
 	const [email, setEmail] = useState("");
-	// auth?.user && auth.user.email ? auth.user?.email : "",
+
+	const emailRef = useRef<InputBoxRef>(null);
 
 	const { focus } = useInputRef(email?.length !== 0);
 
@@ -37,7 +36,7 @@ export default function SignUp() {
 
 	return (
 		<section className="grid grid-cols-12">
-			<div className="-z-10 col-span-12 col-start-1 row-start-1 w-full justify-center overflow-hidden md:h-[540px] lg:h-[720px]">
+			<div className="-z-10 col-span-12 col-start-1 row-start-1 h-[max(34rem,100%)] w-full justify-center overflow-hidden md:h-[540px] lg:h-[720px]">
 				<img
 					src="/public/images/banner-image-small.jpg"
 					srcSet="/public/images/banner-image-small.jpg 1000w, /public/images/banner-image-medium.jpg 1500w, /public/images/banner-image-large.jpg 1800w"
@@ -45,7 +44,7 @@ export default function SignUp() {
 				/>
 			</div>
 
-			<div className="col-span-12 col-start-1 row-start-1 mx-auto my-auto mt-24 w-[calc(100%_-_4rem)] py-8 sm:w-fit md:py-28 lg:py-48">
+			<div className="col-span-12 col-start-1 row-start-1 mx-auto my-auto mt-24 w-[calc(100%_-_4rem)] py-8 sm:w-fit md:py-24 lg:py-44">
 				<div className="flex flex-col gap-y-6">
 					<h1 className="text-center text-3xl font-black text-white lg:text-5xl">
 						Unlimited movies, TV shows and more
@@ -59,16 +58,7 @@ export default function SignUp() {
 						Ready to watch? Enter your email to create or restart
 						your membership.
 					</p>
-					<div
-						// action={auth?.user?.email ? "/signup/planform" : "/in"}
-						// method="POST"
-						// onSubmit={(event) => {
-						// 	if (!validEmail(email)) {
-						// 		event.preventDefault();
-						// 	}
-						// }}
-						className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch"
-					>
+					<div className="relative mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-stretch">
 						{!auth?.user?.email && (
 							<InputBox
 								autoComplete="email"
@@ -76,27 +66,26 @@ export default function SignUp() {
 								name="email"
 								required
 								value={email}
-								className="rounded-md [&+label]:text-[#8c8c8c] [&>*]:rounded-md [&>input]:bg-slate-950 [&>input]:bg-opacity-40 [&>input]:text-white [&>label]:font-semibold [&>label]:text-[#b3b3b3]"
+								className="rounded-md [&+label]:text-[#8c8c8c] [&>*]:rounded-md [&>input]:border [&>input]:bg-slate-950 [&>input]:bg-opacity-40 [&>input]:text-white [&>label]:font-semibold [&>label]:text-[#b3b3b3]"
 								label="Email address"
-								sucess={{ isSucess: validEmail(email) }}
+								ref={emailRef}
+								data-errormessage="Please enter a valid email address."
+								data-validation={(event) => {
+									if (event.target.value.length === 0)
+										return "neutral";
+									else if (validEmail(event.target.value))
+										return "sucess";
+									else return "error";
+								}}
 								onChange={({
 									target: { value },
 								}: ChangeEvent<HTMLInputElement>) => {
 									setEmail(value);
 								}}
-								error={
-									validEmail(email) || email.length === 0
-										? { isError: false }
-										: {
-												isError: true,
-												message:
-													"Please enter a valid email address.",
-										  }
-								}
 							/>
 						)}
-						<a
-							href={
+						<Link
+							to={
 								auth?.user
 									? "/signup/planform"
 									: "/signup/password"
@@ -105,7 +94,12 @@ export default function SignUp() {
 								auth?.user?.email && "mx-auto text-center"
 							}`}
 							onClick={(event) => {
-								if (!validEmail(email)) event.preventDefault();
+								if (!validEmail(email)) {
+									emailRef.current?.setInputBoxStatus(
+										"error",
+									);
+									event.preventDefault();
+								}
 
 								localStorage.setItem("email", email);
 							}}
@@ -113,8 +107,7 @@ export default function SignUp() {
 							{auth?.user?.email
 								? "Finish Signup >"
 								: "Get Started >"}
-							{/* Get Stated &gt; */}
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

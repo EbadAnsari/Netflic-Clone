@@ -46,7 +46,7 @@ html {
 }
 
 body {
-	@apply text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100;
+	@apply bg-zinc-100 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-100;
 }
 
 .scrollbar-none::-webkit-scrollbar {
@@ -88,15 +88,6 @@ select {
 .checkbox-on::after {
 	filter: contrast(100);
 	background-image: url("/public/icons/checkbox-tick.svg");
-}
-
-.sign-in-error-input + span.error {
-	@apply block w-full p-[2px] text-xs text-[#e87c03] content-[attr(data-error-message)];
-}
-
-.sign-up-error-message::after {
-	content: attr(data-error-message);
-	@apply absolute left-0 top-full h-fit w-full cursor-auto text-sm font-medium text-red-500;
 }
 
 @media screen and (min-width: 408px) and (max-width: 639px) {
@@ -155,6 +146,32 @@ select {
 	}
 }
 
-.movie-info:hover :nth-last-child(1) {
-	@apply flex;
+.mask-light {
+	-webkit-mask: linear-gradient(
+		rgb(0, 0, 0) 14%,
+		rgb(0, 0, 0) 54%,
+		rgba(255, 255, 255, 0.6) 80%,
+		transparent
+	);
+	mask: linear-gradient(
+		rgb(0, 0, 0) 14%,
+		rgb(0, 0, 0) 54%,
+		rgba(255, 255, 255, 0.6) 80%,
+		transparent
+	);
+}
+
+html.dark :is(.mask-dark) {
+	-webkit-mask: linear-gradient(
+		rgb(39 39 42) 14%,
+		rgb(39 39 42) 54%,
+		rgba(255, 255, 255, 0.6) 80%,
+		transparent
+	);
+	mask: linear-gradient(
+		rgb(39 39 42) 14%,
+		rgb(39 39 42) 54%,
+		rgba(255, 255, 255, 0.6) 80%,
+		transparent
+	);
 }

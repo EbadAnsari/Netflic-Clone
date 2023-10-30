@@ -55,9 +55,9 @@ function TrailerModal() {
 						</div>
 					</div>
 				</div>
-				<div className="modal-content w-fit space-y-2 p-5 py-4 text-xs text-white sm:space-y-3 sm:px-8 sm:py-6 sm:text-base md:px-12 md:py-8">
+				<div className="modal-content w-fit space-y-2 bg-zinc-100 p-5 py-4 text-xs text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 sm:space-y-3 sm:px-8 sm:py-6 sm:text-base md:px-12 md:py-8">
 					<div className="flex items-center gap-3">
-						<p className="font-semibold text-green-400 sm:text-lg">
+						<p className="font-semibold text-green-500 dark:text-green-400 sm:text-lg">
 							New
 						</p>
 						<p className="flex items-center">

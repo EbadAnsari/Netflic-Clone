@@ -7,7 +7,7 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 } from "firebase/auth";
-import { collection, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import {
 	PropsWithChildren,
 	createContext,

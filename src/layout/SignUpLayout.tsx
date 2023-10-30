@@ -1,7 +1,8 @@
 import Footer from "@components/Footer";
 import ThemeButton from "@components/ThemeButton";
+import { logout } from "@context/AuthContext";
 import { useTheme } from "@utils/functions";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
 	const theme = useTheme();
@@ -22,19 +23,27 @@ export default function SignUpLayout() {
 
 				<div className="cursor-pointer p-1 sm:p-2 md:mx-3 md:text-lg lg:mx-5 xl:mx-8">
 					<div className="flex gap-7">
+						<Link
+							to={"/in/login"}
+							className="rounded-[4px] bg-[#e50914] px-4 py-1 font-semibold text-white"
+						>
+							Sign In
+						</Link>
 						<div
-							className="aspect-square w-7"
+							className="my-auto w-7"
 							onClick={() => {
 								theme.toggleTheme();
 							}}
 						>
 							<ThemeButton />
 						</div>
-						<img
-							src="/public/icons/logout.svg"
-							alt=""
-							className="w-7 brightness-0 dark:brightness-100"
-						/>
+						<Link to={"/in"} onClick={logout}>
+							<img
+								src="/public/icons/logout.svg"
+								alt=""
+								className="w-7 brightness-0 dark:brightness-100"
+							/>
+						</Link>
 					</div>
 				</div>
 			</nav>

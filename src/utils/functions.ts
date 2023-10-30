@@ -1,4 +1,5 @@
 import { ThemeType, Time } from "@interfaces/interface";
+import { resolve } from "path";
 import { MouseEvent } from "react";
 
 type ValidationInputString = string | undefined | null;
@@ -113,4 +114,12 @@ export function toggleLineClamp(
 			}`,
 		);
 	}
+}
+
+export async function halt() {
+	return new Promise<void>((resolve) => {
+		setTimeout(() => {
+			resolve();
+		}, 0);
+	});
 }

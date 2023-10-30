@@ -11,7 +11,7 @@ import {
 } from "@utils/functions";
 import { motion as m } from "framer-motion";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import { Form, useActionData } from "react-router-dom";
+import { Form, Link, useActionData } from "react-router-dom";
 
 export default function Password() {
 	const auth = useAuth();
@@ -50,7 +50,6 @@ export default function Password() {
 			<h1
 				className={`${isEmailSet ? "mb-7" : "mb-3"} text-3xl font-bold`}
 			>
-				{/* mb-7 */}
 				Joining Netflix is easy.
 			</h1>
 
@@ -92,18 +91,7 @@ export default function Password() {
 						name="email"
 						ref={emailRef}
 						value={email}
-						className="[&+span.error]:text-red-500 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
-						// error={
-						// 	validEmail(email) || email.length === 0
-						// 		? { isError: false }
-						// 		: {
-						// 				isError: true,
-						// 				color: "#f04f4f",
-						// 				message:
-						// 					"Please enter a valid email address.",
-						// 		  }
-						// }
-						// sucess={{ isSucess: validEmail(email) }}
+						className="[&+span.error]:text-[#e87c03] dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
 						data-errormessage="Please enter a valid email address."
 						data-validation={(event) => {
 							if (event.target.value.length === 0)
@@ -125,7 +113,7 @@ export default function Password() {
 					name="password"
 					ref={passwordRef}
 					value={password}
-					className="mt-4 [&+span.error]:text-red-500 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
+					className="mt-4 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
 					data-errormessage="Your password must contain between 6 and 16 characters."
 					data-sucessmessage=""
 					data-validation={(event) => {
@@ -168,8 +156,8 @@ export default function Password() {
 					}
 				/>
 
-				<a
-					href="/signup/"
+				<Link
+					to="/signup/"
 					onClick={async (event: MouseEvent) => {
 						event.preventDefault();
 						passwordRef.current?.focus.current();
@@ -185,24 +173,30 @@ export default function Password() {
 
 						setLoading(true);
 
-						try {
-							await signIn(email, password);
+						setTimeout(() => {
 							setLoading(false);
-						} catch {
-							setLoading(false);
-						}
+						}, 2000);
+
+						// setLoading(true);
+
+						// try {
+						// 	await signIn(email, password);
+						// 	setLoading(false);
+						// } catch {
+						// 	setLoading(false);
+						// }
 					}}
-					className={`mx-auto mt-5 flex w-full select-none justify-center gap-5 rounded bg-netflix-red py-4 text-center text-2xl font-semibold text-white hover:bg-netflix-red-hover ${
+					className={`mx-auto mt-5 flex w-full select-none justify-center gap-5 rounded bg-netflix-red py-4 text-center font-semibold text-white hover:bg-netflix-red-hover ${
 						loading && "pointer-events-none"
 					}`}
 				>
 					{loading && (
 						<div className="h-max">
-							<div className="aspect-square h-full w-8 animate-spin rounded-full border-4 border-[#ffffff1a] border-l-white"></div>
+							<div className="aspect-square h-full w-6 animate-spin rounded-full border-[3px] border-[#ffffff44] border-l-white"></div>
 						</div>
 					)}
-					<p>{loading || "Next"}</p>
-				</a>
+					{loading || <p>Next</p>}
+				</Link>
 			</Form>
 		</m.div>
 	);

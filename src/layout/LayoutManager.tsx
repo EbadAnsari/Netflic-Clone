@@ -1,4 +1,7 @@
 import PrivateRoute from "@components/routes/PrivateRoute";
+import Homepage from "@components/routes/root/Homepage";
+import LikedMovies from "@components/routes/root/LikedMovies";
+import UserInfo from "@components/routes/root/UserInfo";
 import Password from "@components/routes/signup/Password";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";
@@ -18,14 +21,18 @@ const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/">
 			<Route
-				index
+				path="/"
 				element={<PrivateRoute element={<HomeLayout />} />}
 				action={() => {
 					console.log("E");
 
 					return null;
 				}}
-			></Route>
+			>
+				<Route index element={<Homepage />}></Route>
+				<Route path=":userId" element={<LikedMovies />}></Route>
+				<Route path="user/:userId" element={<UserInfo />}></Route>
+			</Route>
 			<Route path="in" element={<LandingPage />}>
 				<Route index element={<LandingSignUp />}></Route>
 				<Route
