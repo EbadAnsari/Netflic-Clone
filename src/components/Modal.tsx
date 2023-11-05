@@ -6,6 +6,7 @@ import { toggleLineClamp } from "@utils/functions";
 import { motion as m } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import ImageButton from "./ImageButton";
+import { Fragment } from "react";
 
 function TrailerModal() {
 	const trailerModalState: TrailerModalSliceType = useSelector(
@@ -17,7 +18,6 @@ function TrailerModal() {
 	};
 
 	const dispatch = useDispatch();
-	console.log(genre);
 
 	return (
 		Array.isArray(genre) && (
@@ -62,14 +62,17 @@ function TrailerModal() {
 						</p>
 						<p className="flex items-center">
 							{genre.map((element, index) => (
-								<>
+								<Fragment key={index}>
 									{Genre[element]}
 									{index !== genre.length - 1 ? (
-										<span className="mx-2.5 inline-block h-0.5 w-0.5 rounded-full bg-white p-0.5"></span>
+										<span
+											key={index}
+											className="mx-2.5 inline-block h-0.5 w-0.5 rounded-full bg-white p-0.5"
+										></span>
 									) : (
 										""
 									)}
-								</>
+								</Fragment>
 							))}
 						</p>
 					</div>

@@ -1,12 +1,11 @@
 import Footer from "@components/Footer";
 import ThemeButton from "@components/ThemeButton";
 import { logout } from "@context/AuthContext";
-import { useTheme } from "@utils/functions";
+import { getTheme, setTheme, toggleTheme } from "@utils/functions";
 import { Link, Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
-	const theme = useTheme();
-	theme.setTheme(theme.theme());
+	setTheme(getTheme());
 
 	return (
 		<section className="flex h-full flex-col">
@@ -32,7 +31,7 @@ export default function SignUpLayout() {
 						<div
 							className="my-auto w-7"
 							onClick={() => {
-								theme.toggleTheme();
+								toggleTheme();
 							}}
 						>
 							<ThemeButton />

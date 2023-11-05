@@ -2,7 +2,7 @@ import Footer from "@components/Footer";
 import QuestionAnswer from "@components/QuestionAnswer";
 import SelectLanguage from "@components/SelectLanguage";
 import { SigningState } from "@interfaces/interface";
-import { useTheme } from "@utils/functions";
+import { setTheme } from "@utils/functions";
 import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
@@ -11,8 +11,7 @@ export default function LandingPage() {
 		(state: any) => state.SigningReducer,
 	);
 
-	const theme = useTheme();
-	theme.setTheme("dark");
+	setTheme("dark");
 
 	const questionAndAnswer = [
 		{

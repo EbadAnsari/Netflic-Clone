@@ -5,7 +5,7 @@ import {
 	RegionCode,
 	ReleaseType,
 } from "./TMDBExtra";
-import { GenerateGenre, Genre } from "./TMDBGenre";
+import { Genre } from "./TMDBGenre";
 
 export type SortingOrder =
 	| "popularity.asc"
@@ -39,7 +39,7 @@ export interface TMDBParameters {
 	"primary_release_date.gte": Date;
 	"primary_release_date.lte": Date;
 
-	region: string;
+	region: RegionCode;
 	"release_date.gte": Date;
 	"release_date.lte": Date;
 

@@ -1,28 +1,21 @@
 import ImageButton from "@components/ImageButton";
 import MovieList from "@components/MovieList";
+import { ReleaseType } from "@interfaces/TMDBExtra";
 import { Genre } from "@interfaces/TMDBGenre";
-import { TMDBResult, TMDBResponse } from "@interfaces/TheMovieDBInterface";
+import { TMDBResponse, TMDBResult } from "@interfaces/TheMovieDBInterface";
 import { openModal } from "@store/slice/TrailerModalSlice";
 import { discover, generateImageURL } from "@utils/TheMovieDB";
-import { useTheme, generateRamdomNumber } from "@utils/functions";
+import { generateRamdomNumber } from "@utils/functions";
 import Chance from "chance";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
-const chance = new Chance();
 
 export default function Homepage() {
 	const dispatch = useDispatch();
 
-	const theme = useTheme();
-
-	theme.setTheme("light");
-
-	theme.toggleTheme();
-
 	const [banner, setBanner] = useState<TMDBResult | null>(null);
 
-	const [favourites, setFavourites] = useState<TMDBResult[] | null>(null);
+	// const [favourites, setFavourites] = useState<TMDBResult[] | null>(null);
 	const [genreComedy, setGenreComedy] = useState<TMDBResult[] | null>(null);
 	const [fromIndia, setFromIndia] = useState<TMDBResult[] | null>(null);
 	const [genreHorror, setGenreHorror] = useState<TMDBResult[] | null>(null);
@@ -40,6 +33,7 @@ export default function Homepage() {
 				language: "en-US",
 				with_genres: Genre.Comedy,
 				sort_by: "popularity.desc",
+				with_release_type: ReleaseType.Digital,
 			}),
 			discover({
 				include_adult: false,
@@ -69,7 +63,7 @@ export default function Homepage() {
 					],
 				);
 
-				console.log(data);
+				// console.log(data);
 			});
 	}, []);
 
@@ -85,12 +79,6 @@ export default function Homepage() {
 									imageSize: "w1280",
 							  })
 							: "/public/images/big-buck-bunny.png"
-					}
-					style={
-						{
-							// WebkitMask:
-							// 	"linear-gradient(rgba(0, 0, 0, 1) 14%, rgba(0, 0, 0, 1) 54%, rgba(255, 255, 255, 0.6) 80%, transparent)",
-						}
 					}
 				/>
 				<div className="z-10 col-span-12 col-start-1 row-span-full row-start-4 ml-[5%] w-3/4 dark:text-zinc-900 md:w-96 lg:w-[30rem]">
@@ -117,6 +105,7 @@ export default function Homepage() {
 												imagePath: banner.backdrop_path,
 												imageSize: "w1280",
 											}),
+											id: banner.id,
 											title: banner.title,
 										}),
 									);
@@ -129,7 +118,7 @@ export default function Homepage() {
 				</div>
 			</section>
 			<section className="mx-auto w-[max(90%,10rem)] max-w-[90rem] space-y-6">
-				{
+				{/* {
 					<MovieList
 						movieList={new Array(20).fill(10).map(() => ({
 							description: chance.paragraph(),
@@ -139,7 +128,7 @@ export default function Homepage() {
 						}))}
 						movieListTitle="For you"
 					/>
-				}
+				} */}
 
 				{fromIndia && (
 					<MovieList
@@ -150,6 +139,7 @@ export default function Homepage() {
 								imagePath: movie.backdrop_path,
 								imageSize: "w780",
 							}),
+							id: movie.id,
 							title: movie.title,
 						}))}
 						movieListTitle="For you"
@@ -165,6 +155,7 @@ export default function Homepage() {
 								imagePath: movie.backdrop_path,
 								imageSize: "w780",
 							}),
+							id: movie.id,
 							title: movie.title,
 						}))}
 						movieListTitle="Comedy Section"
@@ -180,6 +171,7 @@ export default function Homepage() {
 								imagePath: movie.backdrop_path,
 								imageSize: "w780",
 							}),
+							id: movie.id,
 							title: movie.title,
 						}))}
 						movieListTitle="Horror"

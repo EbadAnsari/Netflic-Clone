@@ -46,31 +46,16 @@ export async function sleep(duration: number) {
 	});
 }
 
-export function useTheme() {
-	let currentTheme: ThemeType = "";
+export function getTheme() {
+	return (localStorage.getItem("theme") as ThemeType) ?? "";
+}
+export function setTheme(mode: ThemeType) {
+	localStorage.setItem("theme", mode);
+	document.getElementsByTagName("html")[0].setAttribute("class", mode);
+}
 
-	function set(mode: ThemeType) {
-		document.getElementsByTagName("html")[0].setAttribute("class", mode);
-		localStorage.setItem("theme", mode);
-	}
-
-	return {
-		setTheme(mode: ThemeType) {
-			currentTheme = mode;
-			set(mode);
-		},
-		getTheme() {
-			return currentTheme;
-		},
-		toggleTheme() {
-			currentTheme = currentTheme === "dark" ? "light" : "dark";
-			set(currentTheme);
-		},
-		theme(): ThemeType {
-			const theme: ThemeType = localStorage.getItem("theme") as ThemeType;
-			return theme === "dark" || theme === "light" ? theme : "light";
-		},
-	};
+export function toggleTheme() {
+	setTheme(getTheme() === "dark" ? "light" : "dark");
 }
 
 export function isMobileDevice() {

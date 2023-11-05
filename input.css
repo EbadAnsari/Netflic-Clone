@@ -148,8 +148,8 @@ select {
 
 .mask-light {
 	-webkit-mask: linear-gradient(
-		rgb(0, 0, 0) 14%,
-		rgb(0, 0, 0) 54%,
+		rgb(0, 0, 0) 60%,
+		rgb(0, 0, 0) 70%,
 		rgba(255, 255, 255, 0.6) 80%,
 		transparent
 	);
@@ -161,7 +161,7 @@ select {
 	);
 }
 
-html.dark :is(.mask-dark) {
+:is(.dark .dark\:mask-dark) {
 	-webkit-mask: linear-gradient(
 		rgb(39 39 42) 14%,
 		rgb(39 39 42) 54%,
@@ -174,4 +174,48 @@ html.dark :is(.mask-dark) {
 		rgba(255, 255, 255, 0.6) 80%,
 		transparent
 	);
+}
+
+div.movie-info {
+	@apply relative aspect-video h-full w-52 cursor-pointer overflow-hidden rounded-sm md:w-56 [&:hover_:last-child]:visible;
+}
+
+div.movie-info img.movie-image {
+	@apply h-full w-full;
+}
+div.movie-info div.movie-title-div {
+	@apply absolute bottom-0 left-0 w-full bg-gradient-to-b from-transparent to-zinc-900;
+}
+
+div.movie-info div.movie-title-div p.movie-title-p {
+	@apply m-2 !line-clamp-1 text-sm font-bold;
+}
+
+div.movie-info div.extra-button-wrapper-div {
+	@apply invisible absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-30 backdrop-blur-[1px];
+}
+
+div.movie-info div.extra-button-wrapper-div div.extra-button-inner-div {
+	@apply mx-auto flex w-[45%] items-center gap-4;
+}
+div.movie-info
+	div.extra-button-wrapper-div
+	div.extra-button-inner-div
+	div.extra-button-left-div {
+	@apply w-1/2;
+}
+
+div.movie-info
+	div.extra-button-wrapper-div
+	div.extra-button-inner-div
+	div.extra-button-left-div
+	img.info-icon-img {
+	@apply mx-auto rounded-full p-2 hover:backdrop-brightness-75;
+}
+
+div.movie-info
+	div.extra-button-wrapper-div
+	div.extra-button-inner-div
+	div.extra-button-right-div {
+	@apply w-1/2 rounded-full p-2 hover:backdrop-opacity-75;
 }

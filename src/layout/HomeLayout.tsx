@@ -1,12 +1,13 @@
 import Footer from "@components/Footer";
 import Modal from "@components/Modal";
 import Navbar from "@components/Navbar";
+import { setTheme } from "@utils/functions";
 import Chance from "chance";
 import { Outlet } from "react-router-dom";
 
-const chance = new Chance();
-
 export default function HomeLayout() {
+	setTheme("dark");
+
 	return (
 		<section>
 			<Navbar />

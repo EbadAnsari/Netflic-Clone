@@ -19,5 +19,3 @@ export enum Genre {
 	"War" = 10752,
 	"Western" = 37,
 }
-
-export type GenerateGenre = () => string;

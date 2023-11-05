@@ -3,6 +3,12 @@ import { openModal } from "@store/slice/TrailerModalSlice";
 import { useDispatch } from "react-redux";
 import Scroller from "./Scroller";
 import Heart from "./icons/Heart";
+import { LikedMovieSliceType, setLikedMovie } from "@store/slice/LikedSlice";
+import { useSelector } from "react-redux";
+import { Genre } from "@interfaces/TMDBGenre";
+import { Chance } from "chance";
+
+const chance = new Chance();
 
 export default function MovieList({
 	movieListTitle,
@@ -11,7 +17,12 @@ export default function MovieList({
 	movieListTitle: string;
 	movieList: TrailerModalProps[];
 }) {
+	const likedMovie: LikedMovieSliceType = useSelector(
+		(state: any) => state.LikedSliceReducer,
+	);
+
 	const dispatch = useDispatch();
+
 	return (
 		<Scroller title={movieListTitle}>
 			{movieList.map((movieInfo, index) => (
@@ -34,19 +45,31 @@ export default function MovieList({
 							<div className="w-1/2">
 								<img
 									onClick={() => {
-										dispatch(openModal({ ...movieInfo }));
+										dispatch(openModal(movieInfo));
 									}}
 									src="/public/icons/info-icon.svg"
 									className="mx-auto rounded-full p-2 hover:backdrop-brightness-75"
 								/>
 							</div>
-							<div className="w-1/2 rounded-full p-2 hover:backdrop-opacity-75">
+							<div
+								className="w-1/2 rounded-full p-2 hover:backdrop-opacity-75"
+								onClick={() => {
+									if (movieInfo.liked)
+										movieInfo.liked = false;
+									else movieInfo.liked = undefined;
+									dispatch(setLikedMovie({ ...movieInfo }));
+								}}
+							>
 								<Heart
-									color={{
-										b: 225,
-										g: 225,
-										r: 225,
-									}}
+									color={
+										movieInfo.id
+											? "red"
+											: {
+													b: 225,
+													g: 225,
+													r: 225,
+											  }
+									}
 								/>
 							</div>
 						</div>

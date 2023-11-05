@@ -1,7 +1,18 @@
 import { halt } from "@utils/functions";
-import { useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { renderToString } from "react-dom/server";
 
-export default function FixedList() {
+interface FixedListProps<T> {
+	elementArray: T[];
+	"node-creator": (element: T) => HTMLElement;
+}
+
+export default function FixedList<T>({
+	"node-creator": nodeCreator,
+	elementArray,
+}: FixedListProps<T>) {
+	console.log(nodeCreator, elementArray);
+
 	const total = new Array<number>(30)
 		.fill(1)
 		.map((number, index) => number + index);
