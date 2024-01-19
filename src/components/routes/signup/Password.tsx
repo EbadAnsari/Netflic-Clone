@@ -71,7 +71,7 @@ export default function Password() {
 					setLoading(true);
 
 					try {
-						const result = await user.signin(email, password);
+						await user.signin(email, password);
 						setLoading(false);
 					} catch (e) {
 						if (e instanceof FirebaseError) {
