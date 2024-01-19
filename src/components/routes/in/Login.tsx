@@ -1,8 +1,7 @@
 import Alert, { AlertInterface } from "@components/Alert";
 import InputBox, { InputBoxRef, PasswordShowHide } from "@components/InputBox";
-import { login, signIn, useUser } from "@context/AuthContext";
+import { useUser } from "@context/UserContext";
 import { useCheckBox } from "@hooks/CheckBox";
-import { CredentialError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
 import {
 	checkEmail,
@@ -13,7 +12,7 @@ import {
 import { FirebaseError } from "firebase/app";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ActionFunctionArgs, Link, redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Login() {
 	const user = useUser();

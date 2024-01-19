@@ -1,10 +1,12 @@
 import Footer from "@components/Footer";
 import ThemeButton from "@components/ThemeButton";
-import { logout } from "@context/AuthContext";
+import { useUser } from "@context/UserContext";
+// import { logout } from "@context/AuthContext";
 import { getTheme, setTheme, toggleTheme } from "@utils/functions";
 import { Link, Outlet } from "react-router-dom";
 
 export default function SignUpLayout() {
+	const user = useUser();
 	setTheme(getTheme());
 
 	return (
@@ -36,7 +38,12 @@ export default function SignUpLayout() {
 						>
 							<ThemeButton />
 						</div>
-						<Link to={"/in"} onClick={logout}>
+						<Link
+							to={"/in"}
+							onClick={() => {
+								user.logout();
+							}}
+						>
 							<img
 								src="/public/icons/logout.svg"
 								alt=""

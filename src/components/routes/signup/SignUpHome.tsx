@@ -1,11 +1,6 @@
 import { slideInOut } from "@animation/animate";
-import { signIn } from "@context/AuthContext";
-import { ActionReturn } from "@interfaces/interface";
-import { auth } from "@utils/firebase-config";
-import { validEmail, validPassword } from "@utils/functions";
-import { FirebaseError } from "firebase/app";
 import { motion as m } from "framer-motion";
-import { ActionFunctionArgs, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function SignUpHome() {
 	return (

@@ -1,5 +1,5 @@
 import InputBox, { InputBoxRef } from "@components/InputBox";
-import { useUser } from "@context/AuthContext";
+import { useUser } from "@context/UserContext";
 import { useInputRef } from "@hooks/InputBox";
 import { signIn } from "@store/slice/SigningSlice";
 import { validEmail } from "@utils/functions";

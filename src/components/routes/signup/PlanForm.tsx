@@ -1,5 +1,4 @@
 import { slideInOut } from "@animation/animate";
-import { login } from "@context/AuthContext";
 import { PlanInterface } from "@interfaces/interface";
 import { motion as m } from "framer-motion";
 import { useState } from "react";

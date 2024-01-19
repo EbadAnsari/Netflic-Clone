@@ -3,6 +3,7 @@ import {
 	User as FirebaseUser,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signOut,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
@@ -10,11 +11,17 @@ import { auth, firestore } from "@utils/firebase-config";
 import { Nullable } from "@interfaces/interface";
 
 type UserDispatch = Dispatch<SetStateAction<User>>;
+type Payment =
+	| {
+			paid: false;
+			time?: Date;
+	  }
+	| { paid: true; time: Date };
 
 export interface UserInfo {
 	email: string | null;
 	uid: string;
-	paid: boolean;
+	payment: Payment;
 	likedMovies: string[];
 }
 
@@ -75,6 +82,9 @@ export class User implements Nullable<UserInterface> {
 	signin(email: string, password: string) {
 		return createUserWithEmailAndPassword(auth, email, password);
 	}
+	logout() {
+		return signOut(auth);
+	}
 
 	async setUser(user: FirebaseUser) {
 		if (!this.dispatch) return;
@@ -86,7 +96,7 @@ export class User implements Nullable<UserInterface> {
 			console.log(
 				this.addUser({
 					likedMovies: [],
-					paid: false,
+					payment: { paid: false },
 					uid: this.user.uid,
 					email: this.user.email,
 				}),

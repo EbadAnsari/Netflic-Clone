@@ -1,7 +1,7 @@
 import { slideInOut } from "@animation/animate";
 import Alert, { AlertInterface } from "@components/Alert";
 import InputBox, { InputBoxRef } from "@components/InputBox";
-import { signIn, useUser } from "@context/AuthContext";
+import { useUser } from "@context/UserContext";
 import {
 	checkEmail,
 	checkPassword,
@@ -14,7 +14,7 @@ import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { ActionFunctionArgs, Form, Navigate, redirect } from "react-router-dom";
 
 export default function Password() {
-	const auth = useUser();
+	const user = useUser();
 
 	const [email, setEmail] = useState(
 		checkEmail(localStorage.getItem("email")),
@@ -33,7 +33,7 @@ export default function Password() {
 	const passwordRef = useRef<InputBoxRef>(null);
 	const emailRef = useRef<InputBoxRef>(null);
 
-	if (auth?.user?.uid) return <Navigate to={"/signup/"} />;
+	if (user.user?.uid) return <Navigate to={"/signup/"} />;
 
 	return (
 		<m.div
@@ -71,8 +71,7 @@ export default function Password() {
 					setLoading(true);
 
 					try {
-						const result = await signIn(email, password);
-						// console.log(result.user.uid);
+						const result = await user.signin(email, password);
 						setLoading(false);
 					} catch (e) {
 						if (e instanceof FirebaseError) {
