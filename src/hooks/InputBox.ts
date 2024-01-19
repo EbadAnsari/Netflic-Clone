@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
  * @param focused Set the cursor to the input box if `focused` is true, otherwise not set cursor.
  * @returns two functions `focus` and `leave`. `focus()` to set the focus to the input box and `leave()` to unset the focus of the input box.
  */
-export function useInputRef(focused: boolean = false) {
+export function useInputRef(focused?: boolean) {
 	const inputContainer = useRef<HTMLDivElement>(null);
 	const inputElement = useRef<HTMLInputElement>(null);
 	const labelElement = useRef<HTMLLabelElement>(null);
@@ -86,10 +86,10 @@ export function useInputRef(focused: boolean = false) {
 	return {
 		focus,
 		leave,
-		inputContainer,
-		setInputBoxStatus,
-		inputBoxStatus,
 		inputElement,
 		labelElement,
+		inputBoxStatus,
+		inputContainer,
+		setInputBoxStatus,
 	};
 }

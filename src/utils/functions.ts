@@ -108,3 +108,7 @@ export async function halt() {
 		}, 0);
 	});
 }
+
+export function titleCase(string: string) {
+	return string[0].toUpperCase() + string.substring(1);
+}

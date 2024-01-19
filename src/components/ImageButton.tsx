@@ -6,10 +6,10 @@ export default function ImageButton({
 	onClick,
 	className,
 }: {
-	icon: string | ReactNode;
-	text: string;
-	onClick?: Function;
-	className?: string;
+	readonly icon: string | ReactNode;
+	readonly onClick?: Function;
+	readonly text: string;
+	readonly className?: string;
 }) {
 	return (
 		<div

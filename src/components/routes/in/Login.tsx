@@ -1,24 +1,24 @@
-import Alert from "@components/Alert";
+import Alert, { AlertInterface } from "@components/Alert";
 import InputBox, { InputBoxRef, PasswordShowHide } from "@components/InputBox";
-import { signIn, useAuth } from "@context/AuthContext";
+import { login, signIn, useUser } from "@context/AuthContext";
 import { useCheckBox } from "@hooks/CheckBox";
 import { CredentialError } from "@interfaces/interface";
 import { signUp } from "@store/slice/SigningSlice";
-import { checkEmail, validEmail, validPassword } from "@utils/functions";
+import {
+	checkEmail,
+	titleCase,
+	validEmail,
+	validPassword,
+} from "@utils/functions";
+import { FirebaseError } from "firebase/app";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-	ActionFunctionArgs,
-	Form,
-	Link,
-	redirect,
-	useActionData,
-} from "react-router-dom";
+import { ActionFunctionArgs, Link, redirect } from "react-router-dom";
 
-export default function SignIn() {
-	const auth = useAuth();
+export default function Login() {
+	const user = useUser();
 
-	const [email, setEmail] = useState(checkEmail(auth?.user?.email));
+	const [email, setEmail] = useState(checkEmail(user?.user?.email));
 	const [password, setPassword] = useState("");
 
 	const emailRef = useRef<InputBoxRef>(null);
@@ -28,11 +28,17 @@ export default function SignIn() {
 
 	const dispatch = useDispatch();
 
+	const [error, setError] = useState<
+		| { error: false }
+		| { error: true; errorMessage: string; link?: AlertInterface["link"] }
+	>({ error: false });
+
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
+		if (user?.user?.email) setEmail(user.user.email);
 		dispatch(signUp());
-	}, []);
+	}, [user]);
 
 	return (
 		<>
@@ -50,22 +56,23 @@ export default function SignIn() {
 				// method={auth ? "GET" : "POST"}
 				// action={auth ? "/" : "/in/login"}
 				>
-					{/* {action && (
+					{error.error && (
 						<Alert
 							className="mb-4"
-							text="Invalid Credential."
+							text={error.errorMessage}
 							type="error"
 						/>
-					)} */}
+					)}
 					<InputBox
 						label="Email"
 						type="email"
 						name="email"
 						value={email}
 						ref={emailRef}
+						focused={user?.user?.email?.length !== 0 || undefined}
 						className="bg-[#333] [&>input]:border-0 [&>input]:bg-[#333] [&>input]:text-white [&>label]:text-[#b3b3b3]"
-						data-errormessage="Please enter a valid email address."
-						data-validation={(event) => {
+						errorMessage="Please enter a valid email address."
+						validation={(event) => {
 							if (event.target.value.length === 0)
 								return "neutral";
 							else if (validEmail(event.target.value))
@@ -85,8 +92,8 @@ export default function SignIn() {
 						ref={passwordRef}
 						value={password}
 						className="mt-4 bg-[#333] [&>input]:border-0 [&>input]:bg-[#333] [&>input]:text-white [&>label]:text-[#b3b3b3]"
-						data-errormessage="Your password must contain between 6 and 16 characters."
-						data-validation={(event) => {
+						errorMessage="Your password must contain between 6 and 16 characters."
+						validation={(event) => {
 							if (event.target.value.length === 0)
 								return "neutral";
 							else if (validPassword(event.target.value))
@@ -111,19 +118,47 @@ export default function SignIn() {
 						to="/"
 						type="submit"
 						onClick={async (event) => {
+							event.preventDefault();
 							if (
 								!(validEmail(email) && validPassword(password))
 							) {
-								event.preventDefault();
-								// return;
+								passwordRef.current?.setInputBoxStatus("error");
+								return;
 							}
 							setLoading(true);
 
-							setTimeout(() => {
-								setLoading(false);
-							}, 2000);
+							try {
+								const result = await user?.login(
+									email,
+									password,
+								);
+								setError({
+									error: false,
+								});
 
-							// await
+								console.log(result.user.uid);
+							} catch (e) {
+								if (e instanceof FirebaseError) {
+									console.log(e.code);
+									const match = e.code.match(
+										/auth\/([\w-]*)/,
+									) as ["auth", string];
+
+									const errorMessage = titleCase(
+										match[1].replace(/-/g, " "),
+									);
+									if (
+										e.code ===
+										"auth/invalid-login-credentials"
+									) {
+										setError({
+											error: true,
+											errorMessage,
+										});
+									}
+								}
+							}
+							setLoading(false);
 						}}
 						className={`mt-8 flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded bg-[#e50914] p-4 py-3 font-medium text-white transition-all ${
 							loading && "pointer-events-none"
@@ -175,20 +210,4 @@ export default function SignIn() {
 			</div>
 		</>
 	);
-}
-
-export async function SignInAction({
-	request,
-}: ActionFunctionArgs): Promise<CredentialError | Response> {
-	const data = await request.formData();
-
-	const email = data.get("email") as string;
-	const password = data.get("password") as string;
-
-	try {
-		await signIn(email, password);
-		return redirect("/");
-	} catch {
-		return { invalidCredentials: true };
-	}
 }

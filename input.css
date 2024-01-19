@@ -4,7 +4,7 @@
 
 * {
 	@apply outline-none;
-	/* outline: none; */
+	/* @apply outline outline-8 outline-green-400; */
 }
 
 :root {
@@ -146,6 +146,12 @@ select {
 	}
 }
 
+@keyframes search {
+	to {
+		left: 125%;
+	}
+}
+
 .mask-light {
 	-webkit-mask: linear-gradient(
 		rgb(0, 0, 0) 60%,
@@ -218,4 +224,16 @@ div.movie-info
 	div.extra-button-inner-div
 	div.extra-button-right-div {
 	@apply w-1/2 rounded-full p-2 hover:backdrop-opacity-75;
+}
+
+.drop-down {
+	@apply pointer-events-none scale-90 opacity-0 transition-all;
+}
+
+.open-drop-down:focus .drop-down {
+	@apply pointer-events-auto scale-100 opacity-100;
+}
+
+.open-drop-down:focus + .drop-down {
+	@apply pointer-events-auto scale-100 opacity-100;
 }

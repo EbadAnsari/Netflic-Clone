@@ -25,6 +25,7 @@
 		"paths": {
 			"@components/*": ["components/*"],
 			"@interfaces/*": ["interfaces/*"],
+			"@class/*": ["class/*"],
 			"@store/*": ["store/*"],
 			"@layout/*": ["layout/*"],
 			"@utils/*": ["utils/*"],

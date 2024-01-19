@@ -1,20 +1,31 @@
 import { TrailerModalProps } from "@interfaces/ModalInterface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type LikedMovieSliceType = { likedMovies: TrailerModalProps[] };
+export type LikedMovieSliceType = { likedMovieList: TrailerModalProps[] };
 
-const initialState: TrailerModalProps[] = [];
+const initialState: LikedMovieSliceType = {
+	likedMovieList: [],
+};
 
 const likedSlice = createSlice({
 	initialState,
 	name: "likedSlice",
 	reducers: {
-		setLikedMovie(state, actions: PayloadAction<TrailerModalProps>) {
-			// const list = actions.payload
-			state.unshift(actions.payload);
+		setLikeMovie(state, actions: PayloadAction<TrailerModalProps>) {
+			const indexOf = state.likedMovieList.findIndex(
+				(element) => element.id === actions.payload.id,
+			);
+
+			if (indexOf === -1) state.likedMovieList.unshift(actions.payload);
+			else state.likedMovieList[indexOf] = actions.payload;
+		},
+		unLikeMovie(state, actions: PayloadAction<TrailerModalProps>) {
+			state.likedMovieList = state.likedMovieList.filter(
+				(element) => element.id !== actions.payload.id,
+			);
 		},
 	},
 });
 
-export const { setLikedMovie } = likedSlice.actions;
+export const { setLikeMovie, unLikeMovie } = likedSlice.actions;
 export default likedSlice.reducer;

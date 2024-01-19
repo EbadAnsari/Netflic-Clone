@@ -1,14 +1,14 @@
 import { popUp } from "@animation/animate";
-import { ModalState, TrailerModalSliceType } from "@interfaces/ModalInterface";
+import ImageButton from "@components/ImageButton";
+import { TrailerModalSliceType } from "@interfaces/ModalInterface";
 import { Genre } from "@interfaces/TMDBGenre";
 import { closeModal } from "@store/slice/TrailerModalSlice";
 import { toggleLineClamp } from "@utils/functions";
 import { motion as m } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import ImageButton from "./ImageButton";
 import { Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-function TrailerModal() {
+export default function TrailerModal() {
 	const trailerModalState: TrailerModalSliceType = useSelector(
 		(state: any) => state.TrailerModalReducer,
 	);
@@ -67,7 +67,7 @@ function TrailerModal() {
 									{index !== genre.length - 1 ? (
 										<span
 											key={index}
-											className="mx-2.5 inline-block h-0.5 w-0.5 rounded-full bg-white p-0.5"
+											className="mx-1.5 inline-block h-0.5 w-0.5 rounded-full bg-black p-0.5 dark:bg-white sm:mx-2.5"
 										></span>
 									) : (
 										""
@@ -87,32 +87,5 @@ function TrailerModal() {
 				</div>
 			</m.div>
 		)
-	);
-}
-
-export default function Modal() {
-	const modalState: ModalState = useSelector(
-		(state: any) => state.TrailerModalReducer,
-	);
-
-	const dispatch = useDispatch();
-
-	window.onkeydown = function (event) {
-		event.stopImmediatePropagation();
-		if (event.key === "Escape") dispatch(closeModal());
-	};
-	document.body.style.overflow = "hidden";
-
-	return (
-		(modalState.modalState === "open" && (
-			<section className="modal fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
-				<TrailerModal />
-			</section>
-		)) ||
-		(() => {
-			window.onkeydown = null;
-			document.body.style.overflow = "unset";
-			return null;
-		})()
 	);
 }

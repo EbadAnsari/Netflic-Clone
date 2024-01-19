@@ -1,24 +1,30 @@
 import ImageButton from "@components/ImageButton";
-import MovieList from "@components/MovieList";
+import MovieList from "@components/movie/MovieList";
+import { TrailerModalProps } from "@interfaces/ModalInterface";
 import { ReleaseType } from "@interfaces/TMDBExtra";
 import { Genre } from "@interfaces/TMDBGenre";
 import { TMDBResponse, TMDBResult } from "@interfaces/TheMovieDBInterface";
 import { openModal } from "@store/slice/TrailerModalSlice";
 import { discover, generateImageURL } from "@utils/TheMovieDB";
 import { generateRamdomNumber } from "@utils/functions";
-import Chance from "chance";
+import { Chance } from "chance";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+
+const chance = new Chance();
 
 export default function Homepage() {
 	const dispatch = useDispatch();
 
 	const [banner, setBanner] = useState<TMDBResult | null>(null);
 
+	const [movie, setMovie] = useState<{
+		genreComedy: TMDBResult[] | undefined;
+		fromIndia: TMDBResult[] | undefined;
+		genreHorror: TMDBResult[] | undefined;
+	} | null>(null);
+
 	// const [favourites, setFavourites] = useState<TMDBResult[] | null>(null);
-	const [genreComedy, setGenreComedy] = useState<TMDBResult[] | null>(null);
-	const [fromIndia, setFromIndia] = useState<TMDBResult[] | null>(null);
-	const [genreHorror, setGenreHorror] = useState<TMDBResult[] | null>(null);
 
 	useEffect(() => {
 		Promise.allSettled([
@@ -41,6 +47,7 @@ export default function Homepage() {
 				with_genres: Genre.Horror,
 				sort_by: "popularity.desc",
 			}),
+			discover({}),
 		])
 			.then(async (res) => {
 				const movieList: TMDBResponse[] = [];
@@ -50,20 +57,19 @@ export default function Homepage() {
 				return movieList;
 			})
 			.then((data: TMDBResponse[]) => {
-				setFromIndia(data[0].results);
-				setGenreComedy(data[1].results);
-				setGenreHorror(data[2].results);
-
+				setMovie({
+					fromIndia: data[0].results,
+					genreComedy: data[1].results,
+					genreHorror: data[2].results,
+				});
 				const randomMovieList =
-					data[generateRamdomNumber(data.length - 1)];
+					data[generateRamdomNumber(data.length - 1)].results;
 
 				setBanner(
-					randomMovieList.results[
-						generateRamdomNumber(randomMovieList.results.length - 1)
+					randomMovieList[
+						generateRamdomNumber(randomMovieList.length - 1)
 					],
 				);
-
-				// console.log(data);
 			});
 	}, []);
 
@@ -81,12 +87,49 @@ export default function Homepage() {
 							: "/public/images/big-buck-bunny.png"
 					}
 				/>
-				<div className="z-10 col-span-12 col-start-1 row-span-full row-start-4 ml-[5%] w-3/4 dark:text-zinc-900 md:w-96 lg:w-[30rem]">
+				<div className="relative z-10 col-span-12 col-start-1 row-span-full row-start-4 ml-[5%] w-3/4 dark:text-zinc-900 md:w-96 lg:w-[30rem]">
 					<div className="line-clamp-1 text-xl font-black text-white sm:text-2xl md:text-3xl">
-						{banner?.title}
+						{banner?.title || (
+							// {"__________"}
+							// animate-[search_1000ms_ease-in-out_infinite]
+							<div className="h-7 w-8/12 overflow-hidden rounded bg-white bg-opacity-40 backdrop-blur-md xs:h-5 sm:h-8 md:h-9">
+								<div
+									style={
+										{
+											// animation:
+											// 	"search 1000ms ease-in-out infinite",
+										}
+									}
+									className="absolute -left-2/3 h-full w-3/12 bg-white opacity-80 blur-2xl"
+								></div>
+							</div>
+						)}
 					</div>
 					<div className="my-1 line-clamp-3 overflow-hidden text-xs text-white xs:text-sm sm:my-3 sm:line-clamp-4 sm:text-base">
-						{banner?.overview}
+						{banner?.overview ?? (
+							<div className="space-y-1.5">
+								{new Array(4).fill(0).map((element, index) => {
+									return (
+										<div
+											key={index}
+											className="h-0.5 w-full overflow-hidden rounded bg-white bg-opacity-40 backdrop-blur-md xs:h-5"
+										>
+											<div
+												style={
+													{
+														// animation: `search 1000ms ease-in-out ${
+														// 	(index + 5) * 10
+														// }ms infinite`,
+													}
+												}
+												className="absolute -left-2/3 h-full w-3/12 bg-white opacity-80 blur-2xl"
+											></div>
+											{/* animate-[search_1000ms_ease-in-out_infinite] */}
+										</div>
+									);
+								})}
+							</div>
+						)}
 					</div>
 					<div className="my-2 flex w-min gap-3 xs:my-6">
 						<ImageButton
@@ -107,32 +150,41 @@ export default function Homepage() {
 											}),
 											id: banner.id,
 											title: banner.title,
+											liked: false,
 										}),
 									);
 							}}
 							icon="/public/icons/info-icon.svg"
 							text="More info"
-							className="w-full bg-white bg-opacity-40 text-white"
+							className="w-full bg-white bg-opacity-40 text-white backdrop-blur-3xl"
 						/>
 					</div>
 				</div>
 			</section>
 			<section className="mx-auto w-[max(90%,10rem)] max-w-[90rem] space-y-6">
-				{/* {
+				{
 					<MovieList
-						movieList={new Array(20).fill(10).map(() => ({
-							description: chance.paragraph(),
-							genre: [Genre.Action, Genre.Crime],
-							imageSource: "/public/images/big-buck-bunny.png",
-							title: "Big Buck Bunny",
-						}))}
+						movieList={new Array<TrailerModalProps>(20)
+							.fill({
+								description: chance.paragraph(),
+								genre: [Genre.Action, Genre.Crime],
+								imageSource:
+									"/public/images/big-buck-bunny.png",
+								title: "Big Buck Bunny",
+								id: 1,
+								liked: false,
+							})
+							.map((element, index) => ({
+								...element,
+								id: index,
+							}))}
 						movieListTitle="For you"
 					/>
-				} */}
+				}
 
-				{fromIndia && (
+				{movie?.fromIndia && (
 					<MovieList
-						movieList={fromIndia.map((movie) => ({
+						movieList={movie.fromIndia.map((movie) => ({
 							description: movie.overview,
 							genre: movie.genre_ids,
 							imageSource: generateImageURL({
@@ -141,14 +193,15 @@ export default function Homepage() {
 							}),
 							id: movie.id,
 							title: movie.title,
+							liked: false,
 						}))}
 						movieListTitle="For you"
 					/>
 				)}
 
-				{genreComedy && (
+				{movie?.genreComedy && (
 					<MovieList
-						movieList={genreComedy.map((movie) => ({
+						movieList={movie.genreComedy.map((movie) => ({
 							description: movie.overview,
 							genre: movie.genre_ids,
 							imageSource: generateImageURL({
@@ -157,14 +210,15 @@ export default function Homepage() {
 							}),
 							id: movie.id,
 							title: movie.title,
+							liked: false,
 						}))}
 						movieListTitle="Comedy Section"
 					/>
 				)}
 
-				{genreHorror && (
+				{movie?.genreHorror && (
 					<MovieList
-						movieList={genreHorror.map((movie) => ({
+						movieList={movie.genreHorror.map((movie) => ({
 							description: movie.overview,
 							genre: movie.genre_ids,
 							imageSource: generateImageURL({
@@ -173,6 +227,7 @@ export default function Homepage() {
 							}),
 							id: movie.id,
 							title: movie.title,
+							liked: false,
 						}))}
 						movieListTitle="Horror"
 					/>

@@ -10,6 +10,9 @@ export interface BaseObject {
 export type Prettify<T> = {
 	[key in keyof T]: T[key];
 } & {};
+export type Nullable<T> = {
+	[P in keyof T]: T[P] | null;
+};
 
 export interface SignIn {
 	location: "/in/login";
@@ -25,6 +28,31 @@ export type CredentialError = {
 	invalidCredentials?: boolean;
 	errorFromServer?: boolean;
 };
+
+export type ActionReturn<T> = Promise<
+	| {
+			result:
+				| {
+						error: true;
+						errorMessage: string;
+						data: false;
+				  }
+				| { error: false; data: T };
+	  }
+	| Response
+>;
+
+export type PasswordAction =
+	| {
+			sucess: false;
+			error: true;
+			errorMessage: string;
+	  }
+	| {
+			error: false;
+			sucess: true;
+			sucessData: { email?: string; password?: string };
+	  };
 
 export interface Time {
 	second: number | undefined;

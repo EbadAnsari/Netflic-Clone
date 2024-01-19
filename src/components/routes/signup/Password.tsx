@@ -1,40 +1,39 @@
 import { slideInOut } from "@animation/animate";
-import Alert from "@components/Alert";
+import Alert, { AlertInterface } from "@components/Alert";
 import InputBox, { InputBoxRef } from "@components/InputBox";
-import { signIn, useAuth } from "@context/AuthContext";
-import { CredentialError } from "@interfaces/interface";
+import { signIn, useUser } from "@context/AuthContext";
 import {
 	checkEmail,
 	checkPassword,
 	validEmail,
 	validPassword,
 } from "@utils/functions";
+import { FirebaseError } from "firebase/app";
 import { motion as m } from "framer-motion";
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import { Form, Link, useActionData } from "react-router-dom";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { ActionFunctionArgs, Form, Navigate, redirect } from "react-router-dom";
 
 export default function Password() {
-	const auth = useAuth();
+	const auth = useUser();
 
 	const [email, setEmail] = useState(
 		checkEmail(localStorage.getItem("email")),
 	);
 	const [password, setPassword] = useState(checkPassword(""));
 
-	const action = useActionData() as CredentialError;
+	const [error, setError] = useState<
+		| { error: false }
+		| { error: true; errorMessage: string; link: AlertInterface["link"] }
+	>({ error: false });
 
 	const [loading, setLoading] = useState(false);
-
-	// if (auth?.user) return <Navigate to={"/signup/planform"} />;
 
 	const isEmailSet = checkEmail(localStorage.getItem("email"));
 
 	const passwordRef = useRef<InputBoxRef>(null);
 	const emailRef = useRef<InputBoxRef>(null);
 
-	useEffect(() => {
-		console.log(passwordRef);
-	}, []);
+	if (auth?.user?.uid) return <Navigate to={"/signup/"} />;
 
 	return (
 		<m.div
@@ -53,33 +52,67 @@ export default function Password() {
 				Joining Netflix is easy.
 			</h1>
 
-			<Form>
+			<Form
+				action="/signup/"
+				method="post"
+				onSubmit={async (event: FormEvent) => {
+					event.preventDefault();
+					passwordRef.current?.focus.current();
+					emailRef.current?.focus.current();
+					if (!validEmail(email)) {
+						emailRef.current?.setInputBoxStatus("error");
+						return;
+					}
+					if (!validPassword(password)) {
+						passwordRef.current?.setInputBoxStatus("error");
+						return;
+					}
+
+					setLoading(true);
+
+					try {
+						const result = await signIn(email, password);
+						// console.log(result.user.uid);
+						setLoading(false);
+					} catch (e) {
+						if (e instanceof FirebaseError) {
+							if (e.code === "auth/email-already-in-use") {
+								setError({
+									error: true,
+									errorMessage: "Email alredy exist.",
+									link: {
+										linkTo: "/in/login",
+										linkMessage: "Login",
+									},
+								});
+							}
+							setLoading(false);
+						}
+					}
+				}}
+			>
 				{isEmailSet && (
 					<div>
 						<p className="mb-5 text-base sm:text-lg">
 							Enter your password and you'll be watching in no
 							time.
 						</p>
-						{action && (
+						{error.error && (
 							<Alert
 								className="mb-8"
-								text={
-									(action.errorFromServer &&
-										"Unable to login.") ||
-									(action.invalidCredentials &&
-										"Invalid credentials.")
-								}
+								text={error.errorMessage}
 								type="error"
+								link={error.link}
 							/>
 						)}
 						<div>
 							Email
 							<br />
+							<p className="font-semibold">{isEmailSet}</p>
 							<input
-								type="email"
+								type="hidden"
 								name="email"
 								defaultValue={isEmailSet}
-								className="bg-transparent font-semibold"
 							/>
 						</div>
 					</div>
@@ -92,8 +125,8 @@ export default function Password() {
 						ref={emailRef}
 						value={email}
 						className="[&+span.error]:text-[#e87c03] dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
-						data-errormessage="Please enter a valid email address."
-						data-validation={(event) => {
+						errorMessage="Please enter a valid email address."
+						validation={(event) => {
 							if (event.target.value.length === 0)
 								return "neutral";
 							else if (validEmail(event.target.value))
@@ -114,9 +147,9 @@ export default function Password() {
 					ref={passwordRef}
 					value={password}
 					className="mt-4 dark:[&>label]:text-zinc-100 dark:[&_input]:bg-zinc-900 dark:[&_input]:text-zinc-100"
-					data-errormessage="Your password must contain between 6 and 16 characters."
-					data-sucessmessage=""
-					data-validation={(event) => {
+					errorMessage="Your password must contain between 6 and 16 characters."
+					sucessMessage=""
+					validation={(event) => {
 						if (event.target.value.length === 0) return "neutral";
 						else if (validPassword(event.target.value))
 							return "sucess";
@@ -156,36 +189,8 @@ export default function Password() {
 					}
 				/>
 
-				<Link
-					to="/signup/"
-					onClick={async (event: MouseEvent) => {
-						event.preventDefault();
-						passwordRef.current?.focus.current();
-						emailRef.current?.focus.current();
-						if (!validEmail(email)) {
-							emailRef.current?.setInputBoxStatus("error");
-							return;
-						}
-						if (!validPassword(password)) {
-							passwordRef.current?.setInputBoxStatus("error");
-							return;
-						}
-
-						setLoading(true);
-
-						setTimeout(() => {
-							setLoading(false);
-						}, 2000);
-
-						// setLoading(true);
-
-						// try {
-						// 	await signIn(email, password);
-						// 	setLoading(false);
-						// } catch {
-						// 	setLoading(false);
-						// }
-					}}
+				<button
+					type="submit"
 					className={`mx-auto mt-5 flex w-full select-none justify-center gap-5 rounded bg-netflix-red py-4 text-center font-semibold text-white hover:bg-netflix-red-hover ${
 						loading && "pointer-events-none"
 					}`}
@@ -196,8 +201,22 @@ export default function Password() {
 						</div>
 					)}
 					{loading || <p>Next</p>}
-				</Link>
+				</button>
 			</Form>
 		</m.div>
 	);
+}
+
+export async function passwordAction({ request }: ActionFunctionArgs) {
+	const data = await request.formData();
+
+	const email = data.get("email") as string;
+
+	localStorage.setItem("email", email);
+
+	if (validEmail(email)) {
+		return redirect("/signup/password");
+	}
+
+	return redirect("/signup/password");
 }

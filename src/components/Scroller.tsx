@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 interface ScrollerProps {
-	children: ReactNode;
+	children: Iterable<ReactNode>;
 	className?: string;
 	title?: string;
 }
@@ -34,7 +34,12 @@ export default function Scroller({
 		}
 	}, []);
 
-	if (!(children instanceof Array) || !children?.[0]?.$$typeof) return "";
+	if (
+		!(children instanceof Array) ||
+		!children?.[0]?.$$typeof ||
+		children.length === 0
+	)
+		return "";
 	const options = Array.from(children);
 
 	return (

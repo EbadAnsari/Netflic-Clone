@@ -8,7 +8,7 @@ export interface TrailerModalInputs {
 	genre: Genre[];
 	imageSource: string;
 	description: string;
-	liked?: boolean;
+	liked: boolean;
 }
 
 export interface TrailerModalProps extends Prettify<TrailerModalInputs> {}

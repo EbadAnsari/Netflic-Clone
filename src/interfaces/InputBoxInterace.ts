@@ -9,12 +9,10 @@ import {
 export interface InputBoxProps {
 	label: string;
 	component?: ReactNode;
-	"data-validation":
-		| ((event: ValidationEvent) => ValidationResult)
-		| undefined;
-	"data-errormessage": string;
-	"data-sucessmessage"?: string;
-	"data-focused"?: boolean;
+	validation: ((event: ValidationEvent) => ValidationResult) | undefined;
+	errorMessage: string;
+	sucessMessage?: string;
+	focused?: boolean;
 }
 
 export type ValidationResult = "error" | "neutral" | "sucess";

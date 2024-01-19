@@ -4,7 +4,6 @@ import {
 	ChangeEvent,
 	ForwardedRef,
 	forwardRef,
-	useEffect,
 	useImperativeHandle,
 } from "react";
 
@@ -12,11 +11,12 @@ export type InputBoxRef = ReturnType<typeof useInputRef>;
 
 export function PasswordShowHide({
 	passwordElement,
-}: {
+}: Readonly<{
 	passwordElement?: HTMLInputElement | null;
-}) {
+}>) {
 	return (
 		<span
+			tabIndex={2}
 			className="absolute right-0 top-0 inline-flex h-full cursor-pointer select-none items-center rounded bg-transparent p-3 text-center uppercase text-[#737373]"
 			onClick={(event) => {
 				if (!passwordElement) return;
@@ -43,6 +43,19 @@ function InputBox(
 	ref?: ForwardedRef<InputBoxRef>,
 ) {
 	const {
+		label,
+		focused,
+		component,
+		errorMessage,
+		sucessMessage,
+		validation,
+		onChange,
+		onFocus,
+		onBlur,
+		...rest
+	} = InputProps;
+
+	const {
 		focus,
 		leave,
 		inputElement,
@@ -50,7 +63,7 @@ function InputBox(
 		inputContainer,
 		inputBoxStatus,
 		setInputBoxStatus,
-	} = useInputRef();
+	} = useInputRef(focused);
 
 	useImperativeHandle(ref, () => ({
 		focus,
@@ -62,12 +75,6 @@ function InputBox(
 		setInputBoxStatus,
 	}));
 
-	useEffect(() => {
-		if (InputProps["data-focused"]) {
-			focus.current();
-		}
-	}, []);
-
 	return (
 		<div className="w-full">
 			<div
@@ -77,24 +84,22 @@ function InputBox(
 				} relative rounded`}
 			>
 				<input
-					{...InputProps}
+					tabIndex={1}
+					{...rest}
 					ref={inputElement}
 					onFocus={(event) => {
 						focus.current();
-						if (InputProps.onFocus) InputProps.onFocus(event);
+						onFocus?.(event);
 					}}
 					onBlur={(event) => {
 						leave.current();
-						if (InputProps.onBlur) InputProps.onBlur(event);
+						onBlur?.(event);
 					}}
 					onChange={(event: ChangeEvent<HTMLInputElement>) => {
 						focus.current();
 						if (event.target.value.length !== 0) focus.current();
-						InputProps.onChange?.(event);
-						if (InputProps["data-validation"])
-							setInputBoxStatus(
-								InputProps["data-validation"](event),
-							);
+						onChange?.(event);
+						if (validation) setInputBoxStatus(validation(event));
 					}}
 					required
 					className={`w-full rounded border border-solid border-zinc-600 px-4 pb-2 pt-6 [&_+_span]:bg-[#e87c03] ${(() => {
@@ -111,12 +116,12 @@ function InputBox(
 					ref={labelElement}
 					className="input-label absolute left-4 top-1/2 -translate-y-1/2 cursor-text select-none transition-all"
 				>
-					{InputProps.label}
+					{label}
 				</label>
-				{InputProps.component}
+				{component}
 			</div>
 			<span className="error hidden w-full p-[2px] text-xs text-[#e87c03]">
-				{inputBoxStatus === "error" && InputProps["data-errormessage"]}
+				{inputBoxStatus === "error" && errorMessage}
 			</span>
 		</div>
 	);

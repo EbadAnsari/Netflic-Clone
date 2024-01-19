@@ -1,12 +1,4 @@
-import {
-	JSX,
-	PropsWithChildren,
-	ReactNode,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import { renderToString } from "react-dom/server";
+import { ReactNode, useEffect, useState } from "react";
 
 /**
  * @prop gap - it has 2 values which specif their sizes of gap between nodes "low" - 8px, "high" - 16px
@@ -28,7 +20,7 @@ export default function InfiniteScroller({
 				if (element.isIntersecting) setIndex(index + itemCount);
 			});
 		});
-		Array.from(document.querySelectorAll('[data-last="true"')).forEach(
+		Array.from(document.querySelectorAll('[data-last="true"]')).forEach(
 			(element) => {
 				observer.observe(element);
 			},

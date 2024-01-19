@@ -1,15 +1,15 @@
 import PrivateRoute from "@components/routes/PrivateRoute";
+import LandingSignIn from "@components/routes/in/Login";
+import LandingSignUp, { landingPage } from "@components/routes/in/SignUp";
 import Films from "@components/routes/root/Films";
 import Homepage from "@components/routes/root/Homepage";
 import LikedMovies from "@components/routes/root/LikedMovies";
 import Series from "@components/routes/root/Series";
 import UserInfo from "@components/routes/root/UserInfo";
-import Password from "@components/routes/signup/Password";
+import Password, { passwordAction } from "@components/routes/signup/Password";
 import HomeLayout from "@layout/HomeLayout";
 import LandingPage from "@layout/LandingPageLayout";
 import SignUpLayout from "@layout/SignUpLayout";
-import LandingSignIn, { SignInAction } from "@routes/landing-page/SignIn";
-import LandingSignUp from "@routes/landing-page/SignUp";
 import PlanForm from "@routes/signup/PlanForm";
 import SignUpHome from "@routes/signup/SignUpHome";
 import {
@@ -29,13 +29,9 @@ const router = createBrowserRouter(
 				<Route path="my-list" element={<LikedMovies />}></Route>
 				<Route path="user" element={<UserInfo />}></Route>
 			</Route>
-			<Route path="in" element={<LandingPage />}>
+			<Route path="in" element={<LandingPage />} action={landingPage}>
 				<Route index element={<LandingSignUp />}></Route>
-				<Route
-					path="login"
-					action={SignInAction}
-					element={<LandingSignIn />}
-				></Route>
+				<Route path="login" element={<LandingSignIn />}></Route>
 			</Route>
 			<Route path="signup" element={<SignUpLayout />}>
 				<Route
@@ -43,7 +39,11 @@ const router = createBrowserRouter(
 					element={<PrivateRoute element={<SignUpHome />} />}
 				></Route>
 				<Route path="planform" element={<PlanForm />}></Route>
-				<Route path="password" element={<Password />}></Route>
+				<Route
+					path="password"
+					element={<Password />}
+					action={passwordAction}
+				></Route>
 			</Route>
 		</Route>,
 	),

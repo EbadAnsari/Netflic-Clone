@@ -3,6 +3,6 @@ import SigningReducer from "./slice/SigningSlice";
 import TrailerModalReducer from "./slice/TrailerModalSlice";
 import LikedSliceReducer from "./slice/LikedSlice";
 
-export default configureStore({
+export const store = configureStore({
 	reducer: { SigningReducer, TrailerModalReducer, LikedSliceReducer },
 });

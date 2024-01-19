@@ -9,6 +9,7 @@ export default defineConfig({
 		alias: {
 			"@components": resolve(__dirname, "./src/components"),
 			"@interfaces": resolve(__dirname, "./src/interfaces"),
+			"@class": resolve(__dirname, "./src/class"),
 			"@store": resolve(__dirname, "./src/store"),
 			"@layout": resolve(__dirname, "./src/layout"),
 			"@utils": resolve(__dirname, "./src/utils"),

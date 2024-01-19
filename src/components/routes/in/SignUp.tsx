@@ -1,18 +1,20 @@
 import InputBox, { InputBoxRef } from "@components/InputBox";
-import { useAuth } from "@context/AuthContext";
+import { useUser } from "@context/AuthContext";
 import { useInputRef } from "@hooks/InputBox";
 import { signIn } from "@store/slice/SigningSlice";
 import { validEmail } from "@utils/functions";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
+import { ActionFunctionArgs, Link, Navigate } from "react-router-dom";
 
 export default function SignUp() {
-	const auth = useAuth();
+	const auth = useUser();
 
 	const [email, setEmail] = useState("");
 
 	const emailRef = useRef<InputBoxRef>(null);
+
+	const form = useRef<HTMLFormElement>(null);
 
 	const { focus } = useInputRef(email?.length !== 0);
 
@@ -30,7 +32,7 @@ export default function SignUp() {
 		}
 	}, [auth]);
 
-	if (auth?.userInfo?.isPaid) {
+	if (auth?.userInformation?.paid) {
 		return <Navigate to={"/"} />;
 	}
 
@@ -41,6 +43,7 @@ export default function SignUp() {
 					src="/public/images/banner-image-small.jpg"
 					srcSet="/public/images/banner-image-small.jpg 1000w, /public/images/banner-image-medium.jpg 1500w, /public/images/banner-image-large.jpg 1800w"
 					className="h-full min-w-[120%] select-none object-cover brightness-[.4]"
+					alt="asfafsd"
 				/>
 			</div>
 
@@ -65,12 +68,20 @@ export default function SignUp() {
 								type="email"
 								name="email"
 								required
+								onKeyDown={(event) => {
+									if (
+										event.code === "Enter" &&
+										form.current
+									) {
+										form.current.submit();
+									}
+								}}
 								value={email}
 								className="rounded-md [&+label]:text-[#8c8c8c] [&>*]:rounded-md [&>input]:border [&>input]:bg-slate-950 [&>input]:bg-opacity-40 [&>input]:text-white [&>label]:font-semibold [&>label]:text-[#b3b3b3]"
 								label="Email address"
 								ref={emailRef}
-								data-errormessage="Please enter a valid email address."
-								data-validation={(event) => {
+								errorMessage="Please enter a valid email address."
+								validation={(event) => {
 									if (event.target.value.length === 0)
 										return "neutral";
 									else if (validEmail(event.target.value))
@@ -113,4 +124,8 @@ export default function SignUp() {
 			</div>
 		</section>
 	);
+}
+
+export async function landingPage({ request }: ActionFunctionArgs) {
+	const data = await request.formData();
 }

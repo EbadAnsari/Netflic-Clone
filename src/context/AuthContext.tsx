@@ -1,13 +1,11 @@
-import { TMDBResult } from "@interfaces/TheMovieDBInterface";
-import { auth, firestore } from "@utils/firebase-config";
+import { auth } from "@utils/firebase-config";
+import { User } from "@class/User";
 import {
-	User,
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,
 	signInWithEmailAndPassword,
 	signOut,
 } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import {
 	PropsWithChildren,
 	createContext,
@@ -17,66 +15,40 @@ import {
 } from "react";
 
 export function login(email: string, password: string) {
-	return createUserWithEmailAndPassword(auth, email, password);
+	return signInWithEmailAndPassword(auth, email, password);
 }
 export function signIn(email: string, password: string) {
-	return signInWithEmailAndPassword(auth, email, password);
+	return createUserWithEmailAndPassword(auth, email, password);
 }
 export function logout() {
 	return signOut(auth);
 }
 
-export async function setFavouriteMovie(
-	oldFavouriteMoviesId: TMDBResult["id"],
-	newFavouriteMoviesId: TMDBResult["id"],
-) {
-	// setDoc
-}
+const AuthenticationContext = createContext<User>(new User(null));
 
-export async function setPayment() {
-	// setDoc
-}
-
-interface UserInterface {
-	user: User | null;
-	userInfo: {
-		email: string;
-		isPaid?: boolean;
-		favouriteMovies?: number[];
-	} | null;
-}
-
-const AuthenticationContext = createContext<UserInterface | null>(null);
-
-export function useAuth() {
+export function useUser() {
 	return useContext(AuthenticationContext);
 }
 
-export default function Authentication({ children }: PropsWithChildren) {
-	const [currentUserDetails, setCurrentUserDetails] =
-		useState<UserInterface | null>(null);
+export default function Authentication({
+	children,
+}: Readonly<PropsWithChildren>) {
+	const [currentUserDetails, setCurrentUserDetails] = useState<User>(
+		new User(null),
+	);
+
+	const userDetails = new User(setCurrentUserDetails);
 
 	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user)
-				getDocs(
-					query(
-						collection(firestore, "user-info"),
-						where("email", "==", user.email),
-					),
-				).then((data) => {
-					data.forEach((e) => {
-						setCurrentUserDetails({
-							user,
-							userInfo: e.data() as UserInterface["userInfo"],
-						});
-					});
-				});
-			setCurrentUserDetails({
-				user,
-				userInfo: null,
-			});
+		const unscribe = onAuthStateChanged(auth, (user) => {
+			if (!user) return;
+
+			userDetails
+				.setUser(user)
+				.then(() => setCurrentUserDetails(userDetails));
 		});
+
+		return unscribe;
 	}, []);
 
 	return (

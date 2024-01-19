@@ -1,13 +1,11 @@
-import MovieList from "@components/MovieList";
-import { TrailerModalProps } from "@interfaces/ModalInterface";
-import { Genre } from "@interfaces/TMDBGenre";
-import { Chance } from "chance";
+import Heart from "@components/icons/Heart";
+import MovieList from "@components/movie/MovieList";
+import { LikedMovieSliceType } from "@store/slice/LikedSlice";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function LikedMovies() {
-	const chance = new Chance();
-
-	const likedMovie: TrailerModalProps[] = useSelector(
+	const likedMovie: LikedMovieSliceType = useSelector(
 		(state: any) => state.LikedSliceReducer,
 	);
 
@@ -21,7 +19,22 @@ export default function LikedMovies() {
 				/>
 			</div>
 			<div className="col-span-12 col-start-1 row-span-6 row-start-5 h-full bg-zinc-100 px-10 py-3 dark:bg-zinc-900">
-				{<MovieList movieList={likedMovie} movieListTitle="For you" />}
+				{likedMovie.likedMovieList.length ? (
+					<MovieList
+						movieList={likedMovie.likedMovieList}
+						movieListTitle="For you"
+					/>
+				) : (
+					<div className="flex flex-col items-center justify-center">
+						<div className="my-1 aspect-square h-28">
+							<Heart shatter />
+						</div>
+						<p className="text-zinc-400">No liked movies</p>
+						<Link to={"/"} className="text-zinc-400 underline">
+							Explore more?
+						</Link>
+					</div>
+				)}
 			</div>
 		</section>
 	);

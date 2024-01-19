@@ -9,7 +9,7 @@ interface FooterProps {
 
 export default function Footer({ textLink }: FooterProps) {
 	return (
-		<footer className="mt-auto w-full bg-zinc-100 px-4 py-8 text-slate-600 dark:bg-zinc-900 dark:text-zinc-300 sm:px-10 md:px-16 lg:px-20 xl:mx-auto">
+		<footer className="mx-auto mt-auto w-full bg-zinc-100 px-4 py-8 text-slate-600 dark:bg-zinc-900 dark:text-zinc-300 sm:px-10 md:px-16 lg:px-20 2xl:w-[90rem]">
 			<div className="footer text-[#737373]">
 				<div className="tel mb-7 py-3">
 					Questions? Call&nbsp;

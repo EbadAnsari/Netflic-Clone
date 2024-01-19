@@ -1,8 +1,7 @@
 import Footer from "@components/Footer";
-import Modal from "@components/Modal";
+import Modal from "@components/modal/Modal";
 import Navbar from "@components/Navbar";
 import { setTheme } from "@utils/functions";
-import Chance from "chance";
 import { Outlet } from "react-router-dom";
 
 export default function HomeLayout() {
@@ -11,11 +10,9 @@ export default function HomeLayout() {
 	return (
 		<section>
 			<Navbar />
-
 			<Outlet />
 
 			<Modal />
-
 			<Footer
 				textLink={[
 					{ text: "FAQ", link: "#" },
