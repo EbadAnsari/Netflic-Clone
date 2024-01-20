@@ -28,9 +28,10 @@ export default function Authentication({
 		const unscribe = onAuthStateChanged(auth, (user) => {
 			if (!user) return;
 
-			userDetails
-				.setUser(user)
-				.then(() => setCurrentUserDetails(userDetails));
+			userDetails.setUser(user).then(() => {
+				setCurrentUserDetails(userDetails);
+				// userDetails.logout();
+			});
 		});
 
 		return unscribe;
@@ -38,6 +39,14 @@ export default function Authentication({
 
 	return (
 		<UserContext.Provider value={currentUserDetails}>
+			<div
+				className="fixed left-1/2 z-[999] bg-red-200 p-6"
+				onClick={() => {
+					userDetails.logout();
+				}}
+			>
+				Delete
+			</div>
 			{children}
 		</UserContext.Provider>
 	);

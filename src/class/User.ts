@@ -1,22 +1,22 @@
 import { TMDBResult as MovieInfo } from "@interfaces/TheMovieDBInterface";
+import { Nullable } from "@interfaces/interface";
+import { auth, firestore } from "@utils/firebase-config";
 import {
 	User as FirebaseUser,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
-import { auth, firestore } from "@utils/firebase-config";
-import { Nullable } from "@interfaces/interface";
 
 type UserDispatch = Dispatch<SetStateAction<User>>;
 type Payment =
 	| {
 			paid: false;
-			time?: Date;
+			time?: Timestamp;
 	  }
-	| { paid: true; time: Date };
+	| { paid: true; time: Timestamp };
 
 export interface UserInfo {
 	email: string | null;
@@ -30,17 +30,22 @@ export interface UserInterface {
 	userInformation: UserInfo;
 }
 
+export class UserError extends Error {
+	static UserNotSet = "User must be set.";
+	static DispatchNotSet = "Dispatch not set.";
+}
+
 export class User implements Nullable<UserInterface> {
 	static Collection = {
 		likedMovieCollection: "liked-movie",
-		userInfoCollection: "user-info",
+		userInformationCollection: "user-info",
 	} as const;
 
 	static DocumentReference = {
 		likedMovieDocumentReference: (id: number) =>
 			doc(firestore, User.Collection.likedMovieCollection, `${id}`),
-		userInformationDocumentReference: (id: string) =>
-			doc(firestore, User.Collection.userInfoCollection, id),
+		userInformationDocumentReference: (uid: string) =>
+			doc(firestore, User.Collection.userInformationCollection, uid),
 	} as const;
 
 	user: FirebaseUser | null;
@@ -49,11 +54,20 @@ export class User implements Nullable<UserInterface> {
 	private dispatch: UserDispatch | null;
 
 	private addUser(user: UserInfo) {
-		return setDoc(this.userInfoDocRef(user.uid), user);
+		return setDoc(this.userInformationDocRef(user.uid), user);
 	}
 
 	private async getUser(uid: string) {
-		return (await getDoc(this.userInfoDocRef(uid))).data() as UserInfo;
+		return (
+			await getDoc(this.userInformationDocRef(uid))
+		).data() as UserInfo;
+	}
+
+	private checkUser(user: FirebaseUser | null): user is null {
+		return user === null;
+	}
+	private checkDispatch(dispatch: UserDispatch | null): dispatch is null {
+		return dispatch === null;
 	}
 
 	constructor(dispatch: UserDispatch | null) {
@@ -64,9 +78,8 @@ export class User implements Nullable<UserInterface> {
 	setDispatchFunction(dispatch: UserDispatch) {
 		this.dispatch = dispatch;
 	}
-
-	userInfoDocRef(uid: string) {
-		return doc(firestore, User.Collection.userInfoCollection, uid);
+	userInformationDocRef(uid: string) {
+		return doc(firestore, User.Collection.userInformationCollection, uid);
 	}
 	likedMovieDocRef(movieId: number) {
 		return doc(
@@ -86,25 +99,49 @@ export class User implements Nullable<UserInterface> {
 		return signOut(auth);
 	}
 
+	/**
+	 * Use upload the user information in the database.
+	 */
 	async setUser(user: FirebaseUser) {
-		if (!this.dispatch) return;
+		if (this.checkDispatch(this.dispatch)) {
+			throw new UserError(UserError.UserNotSet);
+		}
 
 		this.user = user;
 		try {
 			this.userInformation = await this.getUser(user.uid);
+			console.log("Get user");
 		} catch (error) {
-			console.log(
-				this.addUser({
-					likedMovies: [],
-					payment: { paid: false },
-					uid: this.user.uid,
-					email: this.user.email,
-				}),
-			);
+			await this.addUser({
+				likedMovies: [],
+				payment: { paid: false },
+				uid: this.user.uid,
+				email: this.user.email,
+			});
 		}
 		this.dispatch(this);
 	}
 
+	/**
+	 * Use to set the payment to true.
+	 */
+	async setPaid() {
+		if (this.checkUser(this.user))
+			throw new UserError(UserError.UserNotSet);
+		return setDoc(
+			User.DocumentReference.userInformationDocumentReference(
+				this.user?.uid,
+			),
+			{
+				...this.userInformation,
+				payment: { paid: true, time: Timestamp.now() },
+			},
+		);
+	}
+
+	/**
+	 * Use to set the liked movie.
+	 */
 	async likeMovie(movieInfo: MovieInfo) {
 		if (!this.user) throw new Error("User must be set user.");
 		else if (!this.userInformation)
